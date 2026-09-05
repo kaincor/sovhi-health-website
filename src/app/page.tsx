@@ -3,6 +3,9 @@
 import Image from "next/image";
 import { useState } from "react";
 
+import StatsSection from "@/components/StatsSection";
+import TeamSection from "@/components/TeamSection";
+
 const navigation = [
   { label: "How it works", href: "#how-it-works" },
   { label: "Who it's for", href: "#who-its-for" },
@@ -73,6 +76,8 @@ export default function Home() {
         </div>
       </section>
 
+      <StatsSection />
+
       <section className="story-section">
         <div className="story-content">
           <h2>Your body tells a complete story</h2>
@@ -101,7 +106,8 @@ export default function Home() {
 
       <section id="how-it-works" className="page-section" />
       <section id="who-its-for" className="page-section" />
-      <section id="our-team" className="page-section" />
+
+      <TeamSection />
     </main>
   );
 }
