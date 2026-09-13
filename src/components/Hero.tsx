@@ -40,12 +40,16 @@ export default function Hero() {
           ease: EASE_GENTLE,
         }}
       >
+        {/* `fill`, not width/height: the 1020x529 window crops a 1.25 photo to
+            1.93, so declaring intrinsic dimensions makes next/image warn that
+            one axis was modified without the other. The crop itself lives in
+            .hero__image via object-fit and object-position. */}
         <Image
           className="hero__image"
           src="/images/hero.webp"
           alt="Three friends laughing together on a picnic blanket in a sunlit park, reaching for a tray of strawberries and pastries."
-          width={1020}
-          height={813}
+          fill
+          sizes="(max-width: 1436px) 71vw, 1020px"
           priority
         />
       </motion.figure>

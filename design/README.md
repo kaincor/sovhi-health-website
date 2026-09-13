@@ -30,4 +30,12 @@ only. (`public/` would be served; that is why this sits at the repo root.)
 
 Figma file: KKhoaZZLLln9CO999Tkzdn
 Full-page frame: node 412-802
-Hero frame: node 382-111
+
+| section | frame node |
+|---|---|
+| 1 hero | 382-111 |
+| 2 stats / upstream | 386-136 |
+
+The node id is the `node-id=` value in a Figma URL. Sending it with each
+section is useful: it goes in the component's doc comment, so anyone reading
+the code later can open the exact frame it came from.
