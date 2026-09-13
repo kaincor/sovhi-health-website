@@ -41,3 +41,19 @@ yarn-error.log*
 # typescript
 *.tsbuildinfo
 next-env.d.ts
+
+# Licensed brand fonts — served at runtime, never committed.
+# This repo is public; the Graphik (Commercial Type) and TT Commons Pro
+# (TypeType) EULAs cover serving from our own domain, not redistribution.
+# Place the licensed web kits in public/fonts/ locally and upload them to
+# the host as part of deploy.
+/public/fonts/*.woff2
+/public/fonts/*.woff
+/public/fonts/Graphik-*
+/public/fonts/TTCommonsPro-*
+
+# Figma Dev Mode exports — reference material, not source. The README and the
+# extracted design system are ours and do get committed.
+/design/*
+!/design/README.md
+!/design/DESIGN-SYSTEM.md

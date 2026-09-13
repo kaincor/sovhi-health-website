@@ -1,23 +1,130 @@
 @import "tailwindcss";
 
-/* Fonts are being replaced in the redesign. These two faces are kept only so
-   the shell renders in something sensible; the incoming demo face plus its
-   gap-filler will be declared here under one family name, using
-   unicode-range on the filler to cover the glyphs the demo face lacks. */
+/* ---------------------------------------------------------------------------
+   Brand type: one family, "Sovhi", assembled from two typefaces.
+
+   TT Commons Pro carries all text. Graphik supplies 12 characters:
+       ! " $ % ( ) * + - / 4 =
+
+   IMPORTANT — the Graphik override is a TEMPORARY workaround, not a design
+   decision. The TT Commons Pro files here are Fontspring DEMO builds, which
+   replace exactly those 12 glyphs (yes, including the numeral 4) with a
+   "DEMO" watermark leaf. Graphik is standing in for the watermarked slots.
+
+   When the licensed TT Commons Pro web kit lands, DELETE the Graphik block
+   below. Licensed TT Commons has all 12 characters, and Graphik's versions
+   are visibly wider (period 11.28 vs 7.84 at 40px), so keeping the override
+   would ship mismatched punctuation and a mismatched 4 forever.
+
+   Order matters while it stays: when faces in one family share a weight and
+   their unicode-ranges overlap, CSS checks them in REVERSE declaration order
+   (CSS Fonts L4 §4.5). The Graphik faces must stay below the TT Commons
+   faces or they will never win for their range.
+
+   Each src lists .woff2 first, then .otf, so the licensed web kit takes
+   over automatically once it replaces the local desktop/demo files.
+   --------------------------------------------------------------------------- */
+
+/* --- Text face: TT Commons Pro ------------------------------------------- */
+
 @font-face {
   font-family: "Sovhi";
-  src: url("/fonts/Sovhi Serif Regular.otf") format("opentype");
-  font-weight: 400;
+  src:
+    url("/fonts/TTCommonsPro-Medium.woff2") format("woff2"),
+    url("/fonts/TTCommonsPro-Medium.otf") format("opentype");
+  font-weight: 500;
   font-style: normal;
   font-display: swap;
 }
 
 @font-face {
   font-family: "Sovhi";
-  src: url("/fonts/Sovhi Serif Bold.otf") format("opentype");
-  font-weight: 700;
+  src:
+    url("/fonts/TTCommonsPro-MediumItalic.woff2") format("woff2"),
+    url("/fonts/TTCommonsPro-MediumItalic.otf") format("opentype");
+  font-weight: 500;
+  font-style: italic;
+  font-display: swap;
+}
+
+@font-face {
+  font-family: "Sovhi";
+  src:
+    url("/fonts/TTCommonsPro-ExtraBold.woff2") format("woff2"),
+    url("/fonts/TTCommonsPro-ExtraBold.otf") format("opentype");
+  font-weight: 800;
   font-style: normal;
   font-display: swap;
+}
+
+@font-face {
+  font-family: "Sovhi";
+  src:
+    url("/fonts/TTCommonsPro-ExtraBoldItalic.woff2") format("woff2"),
+    url("/fonts/TTCommonsPro-ExtraBoldItalic.otf") format("opentype");
+  font-weight: 800;
+  font-style: italic;
+  font-display: swap;
+}
+
+/* --- Glyph overrides: Graphik -------------------------------------------- */
+
+/* The DEMO build watermarks 28 printable ASCII characters, verified by
+   advance width (every watermarked glyph is 598 units where real glyphs vary):
+     U+21-2B   ! " # $ % & ' ( ) * +
+     U+2D      -           U+2F   /
+     U+34      4           U+3C-3E  < = >
+     U+40      @           U+5B-60  [ \ ] ^ _ `
+     U+7B-7E   { | } ~
+   Figma independently routes @ & ' - + $ / 4 to Graphik, which agrees.
+
+   The last two lines are a separate concern and should OUTLIVE the demo swap.
+   Figma sets the footer's (c) in "Actay Wide"; we use Graphik instead, which
+   covers U+A9 along with (R), (TM) and the degree sign. TT
+   Commons Pro has no glyphs above U+007E in either build we have, so curly
+   quotes, en/em dashes and the ellipsis drop to a system font mid-word. Check
+   whether the licensed kit covers these; if it does, drop that line too. */
+
+@font-face {
+  font-family: "Sovhi";
+  src:
+    url("/fonts/Graphik-Regular.woff2") format("woff2"),
+    url("/fonts/Graphik-Regular.otf") format("opentype");
+  font-weight: 500;
+  font-style: normal;
+  font-display: swap;
+  unicode-range:
+    U+21-2B, U+2D, U+2F, U+34, U+3C-3E, U+40, U+5B-60, U+7B-7E,
+    U+A9, U+AE, U+B0, U+2122,
+    U+2013-2014, U+2018-2019, U+201C-201D, U+2026;
+}
+
+@font-face {
+  font-family: "Sovhi";
+  src:
+    url("/fonts/Graphik-RegularItalic.woff2") format("woff2"),
+    url("/fonts/Graphik-RegularItalic.otf") format("opentype");
+  font-weight: 500;
+  font-style: italic;
+  font-display: swap;
+  unicode-range:
+    U+21-2B, U+2D, U+2F, U+34, U+3C-3E, U+40, U+5B-60, U+7B-7E,
+    U+A9, U+AE, U+B0, U+2122,
+    U+2013-2014, U+2018-2019, U+201C-201D, U+2026;
+}
+
+@font-face {
+  font-family: "Sovhi";
+  src:
+    url("/fonts/Graphik-Semibold.woff2") format("woff2"),
+    url("/fonts/Graphik-Semibold.otf") format("opentype");
+  font-weight: 800;
+  font-style: normal;
+  font-display: swap;
+  unicode-range:
+    U+21-2B, U+2D, U+2F, U+34, U+3C-3E, U+40, U+5B-60, U+7B-7E,
+    U+A9, U+AE, U+B0, U+2122,
+    U+2013-2014, U+2018-2019, U+201C-201D, U+2026;
 }
 
 :root {
@@ -37,4 +144,464 @@ body {
   background: var(--background);
   color: var(--foreground);
   font-family: "Sovhi", sans-serif;
+  font-weight: 500;
+}
+
+/* ===========================================================================
+   DESIGN TOKENS
+   Palette and layout values from the Figma file (node 382-111).
+
+   RESPONSIVE STRATEGY
+   The design is authored at a fixed 1440px stage. Every dimension below is
+   written as min(<figma px>, <percentage>) or clamp(<floor>, <vw>, <figma px>),
+   with the fluid term deliberately overshooting the Figma value before 1440px
+   is reached. That makes the layout exact at >=1440 (the clamp pins it) and
+   proportional below, with floors so type never becomes illegible. Widths use
+   percentages rather than vw so a scrollbar cannot cause overflow.
+   =========================================================================== */
+
+:root {
+  /* Palette — names match the Figma variables exactly. All eight are used
+     across the full-page frame (node 412-802). */
+  --cream: #eef0e9;
+  --sovhi-green: #0b5f5a;
+  --orange: #d97b31;
+  --teal: #26bb93;
+  --off-black: #1e1e21;
+  --rust: #693c18;
+  --light-blue: #8adde4;
+  --turquoise: #41686c;
+
+  /* Side borders. --page-gutter is the 108px border every section respects
+     (confirmed against the full-page Figma frame, node 412-802); the hero
+     image uses its own wider 210px inset. Both collapse proportionally on
+     narrow screens. */
+  --page-width: 1440px;
+  --page-gutter: clamp(20px, 7.6%, 108px);
+
+  /* Type. TT Commons Pro is ascender 1000 / descender -250 / lineGap 0 at
+     1000 upem, so Figma's "auto" line height is exactly 1.25em. Setting the
+     ratio rather than a px value keeps it correct at every size. */
+  --lh-auto: 1.25;
+
+  /* Every size present in the full-page frame. Each vw term is size/1360*100,
+     which overshoots the cap so >=1440 pins the exact Figma value; the floor
+     is where it stops shrinking so text stays legible on phones. */
+  --fs-64: clamp(34px, 4.7059vw, 64px);
+  --fs-48: clamp(28px, 3.5294vw, 48px);
+  --fs-40: clamp(26px, 2.9412vw, 40px);
+  --fs-36: clamp(24px, 2.6471vw, 36px);
+  --fs-32: clamp(22px, 2.3529vw, 32px);
+  --fs-30: clamp(21px, 2.2059vw, 30px);
+  --fs-24: clamp(17px, 1.7647vw, 24px);
+  --fs-20: clamp(16px, 1.4706vw, 20px);
+  --fs-18: clamp(15px, 1.3235vw, 18px);
+  --fs-16: clamp(13px, 1.1765vw, 16px);
+
+  /* Hero aliases, kept so the hero reads semantically. */
+  --fs-title: var(--fs-48);
+  --fs-lede: var(--fs-24);
+  --fs-cta: var(--fs-20);
+  --fs-nav: var(--fs-16);
+  --fs-brand: var(--fs-24);
+
+  /* Corner radii, fluid on the same principle. */
+  --r-70: clamp(24px, 5.1471vw, 70px);
+  --r-35: clamp(16px, 2.5735vw, 35px);
+  --r-30: clamp(14px, 2.2059vw, 30px);
+  --r-25: clamp(12px, 1.8382vw, 25px);
+
+  /* Shadows, verbatim from Figma. The footer panel casts upward; the cards on
+     the Light-Blue section use a turquoise-tinted shadow rather than black. */
+  --shadow-sm: 0 5px 10px rgba(0, 0, 0, 0.25);
+  --shadow-md: 0 10px 15px rgba(0, 0, 0, 0.25);
+  --shadow-lg: 0 10px 20px rgba(0, 0, 0, 0.25);
+  --shadow-flat: 0 10px 10px rgba(0, 0, 0, 0.25);
+  --shadow-up: 0 -5px 10px rgba(0, 0, 0, 0.25);
+  --shadow-tint: 0 10px 20px rgba(65, 103, 107, 0.5);
+  --text-shadow-strong: 0 5px 10px rgba(0, 0, 0, 0.8);
+
+  /* Motion timeline. Ordered as specified: image, then nav at 1s, then the
+     text stagger, then the highlight sweep once the CTA has landed. */
+  --t-sweep-dur: 0.9s;
+  --ease-gentle: cubic-bezier(0.22, 1, 0.36, 1);
+}
+
+/* ===========================================================================
+   PAGE SHELL
+   =========================================================================== */
+
+html {
+  /* The design has no horizontal overflow at any width; make that a hard
+     guarantee so a stray wide child can never produce a sideways scrollbar. */
+  overflow-x: hidden;
+}
+
+body {
+  background: var(--cream);
+  color: var(--sovhi-green);
+}
+
+.page {
+  width: 100%;
+  max-width: var(--page-width);
+  margin-inline: auto;
+  position: relative;
+}
+
+
+/* ===========================================================================
+   SECTION SCAFFOLD
+   Every section in the full-page frame is 1440 wide with a 108px side border
+   and its own background. These two classes carry that, so a section's own
+   rules only describe its contents.
+   =========================================================================== */
+
+.section {
+  position: relative;
+  width: 100%;
+  background: var(--cream);
+}
+
+.section__inner {
+  width: 100%;
+  max-width: var(--page-width);
+  margin-inline: auto;
+  padding-inline: var(--page-gutter);
+  box-sizing: border-box;
+}
+
+.section--green { background: var(--sovhi-green); color: var(--cream); }
+.section--orange { background: var(--orange); color: var(--cream); }
+.section--light-blue { background: var(--light-blue); color: var(--turquoise); }
+
+/* ===========================================================================
+   NAV
+   Figma: a 1392x45 bar at (24,16) in the 1440 stage, with its items at fixed
+   offsets. The dock is a full-width fixed strip that centres the bar, so the
+   bar itself is free to carry the drop-in and scroll-away transform.
+   =========================================================================== */
+
+.site-nav-dock {
+  position: fixed;
+  top: 16px;
+  left: 0;
+  right: 0;
+  z-index: 100;
+  display: flex;
+  justify-content: center;
+  pointer-events: none;
+}
+
+.site-nav {
+  pointer-events: auto;
+  position: relative;
+  display: flex;
+  align-items: center;
+  width: min(1392px, calc(100% - 48px));
+  height: clamp(38px, 3.3vw, 45px);
+  padding-left: min(9px, 0.8%);
+  padding-right: min(7.46px, 0.7%);
+  background: var(--cream);
+  border-radius: 70px;
+  box-shadow: var(--shadow-sm);
+  will-change: transform;
+}
+
+/* Figma spaces the links with fixed-width boxes rather than gaps. The boxes
+   are reproduced so positions match at 1440; min-width keeps the label from
+   being crushed once the fluid width drops below the text. */
+.site-nav__links {
+  display: flex;
+  align-items: center;
+  align-self: stretch;
+  gap: clamp(10px, 1.9vw, 25px);
+}
+
+.site-nav__item {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  height: 100%;
+  min-width: max-content;
+  text-align: center;
+  font-size: var(--fs-nav);
+  line-height: var(--lh-auto);
+  font-weight: 500;
+  color: var(--sovhi-green);
+  text-decoration: none;
+}
+
+/* vw rather than %, because these sit inside content-sized flex wrappers.
+   Each fluid term overshoots its cap so >=1440 pins the exact Figma width. */
+.site-nav__item--works { width: clamp(86px, 9.5vw, 130px); }
+.site-nav__item--who   { width: clamp(79px, 9.5vw, 130px); }
+.site-nav__item--team  { width: clamp(64px, 6.8vw, 92px); }
+
+/* Figma centres the wordmark's text box on x=744 and drops the glyph at 796,
+   putting the lockup 35.7px right of the bar's centre. Corrected here: the
+   wordmark and glyph are one unit, centred on the bar. */
+.site-nav__lockup {
+  position: absolute;
+  left: 50%;
+  transform: translateX(-50%);
+  display: flex;
+  align-items: center;
+  gap: clamp(3px, 0.32vw, 4.46px);
+  white-space: nowrap;
+}
+
+.site-nav__brand {
+  font-size: var(--fs-brand);
+  line-height: var(--lh-auto);
+  font-weight: 800;
+  color: var(--sovhi-green);
+}
+
+.site-nav__mark {
+  display: block;
+  width: clamp(15px, 1.4vw, 19px);
+  height: auto;
+  flex: none;
+}
+
+.site-nav__actions {
+  display: flex;
+  align-items: center;
+  align-self: stretch;
+  gap: clamp(8px, 1.5vw, 19.94px);
+  margin-left: auto;
+}
+
+.site-nav__cta {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: clamp(100px, 9.5vw, 127.6px);
+  min-width: max-content;
+  height: clamp(20px, 2vw, 27px);
+  padding-inline: 10px;
+  background: var(--sovhi-green);
+  border-radius: 35px;
+  box-shadow: var(--shadow-lg);
+  font-size: var(--fs-nav);
+  line-height: var(--lh-auto);
+  font-weight: 500;
+  color: var(--cream);
+  text-decoration: none;
+  border: 0;
+  cursor: pointer;
+  font-family: inherit;
+  white-space: nowrap;
+  transition: background-color 320ms ease;
+}
+
+.site-nav__cta:hover,
+.site-nav__cta:focus-visible {
+  background-color: var(--orange);
+}
+
+/* ===========================================================================
+   HERO
+   Figma stacks these at y = 124 / 220 / 771 / 890 in a 990px frame. Expressed
+   here as flow with the gaps between them, which reproduces those positions
+   at 1440 and reflows cleanly below:
+     124 + 59 + 37 + 529 + 22 + 104 + 15 + 65 + 35 = 990
+   =========================================================================== */
+
+.hero {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  /* Floor is 84px, not the proportional value: the nav is fixed and bottoms
+     out at 54px on narrow screens, so a smaller floor would tuck the title
+     underneath it. 9.1176vw still pins 124px at 1440. */
+  padding-top: clamp(84px, 9.1176vw, 124px);
+  padding-bottom: clamp(20px, 2.5735vw, 35px);
+}
+
+.hero__title {
+  /* Fixed height, not min-height: the 48px/1.25 line box is 60px against
+     Figma's 59px box, so letting content drive the height would push the
+     image down by 1px. The glyphs are centred either way. */
+  height: clamp(34px, 4.3382vw, 59px);
+  width: 100%;
+  padding-inline: var(--page-gutter);
+  box-sizing: border-box;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  text-align: center;
+  font-size: var(--fs-title);
+  line-height: var(--lh-auto);
+  font-weight: 800;
+  color: var(--orange);
+  margin: 0;
+}
+
+.hero__figure {
+  width: min(1020px, 71%);
+  aspect-ratio: 1020 / 529;
+  margin: clamp(20px, 2.7206vw, 37px) 0 0;
+  border-radius: var(--r-70);
+  overflow: hidden;
+  background: var(--cream);
+  box-shadow: var(--shadow-lg);
+  will-change: transform, opacity;
+}
+
+/* Figma crops a 1020x813 render to a 529px window by offsetting it -201px.
+   As a ratio that is 201 / (813 - 529) = 70.77% down the overflow, which
+   object-position reproduces at any container size. */
+.hero__image {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  object-position: center 70.77%;
+  display: block;
+}
+
+.hero__lede {
+  /* min-height, not height: 854px holds two lines at 1440 (60px inside a
+     104px box) but must be free to grow to three or four when narrower. */
+  min-height: clamp(60px, 7.5vw, 104px);
+  width: min(854px, 60%);
+  margin: clamp(14px, 1.6176vw, 22px) 0 0;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  text-align: center;
+  font-size: var(--fs-lede);
+  line-height: var(--lh-auto);
+  font-weight: 500;
+  color: var(--sovhi-green);
+}
+
+/* The lede is one run of text with a differently coloured phrase inside it.
+   Its coloured spans must stay inline, so they are wrapped in a single flex
+   item; as direct children of the column flex container each span would
+   become its own line. */
+.hero__lede-copy {
+  display: block;
+  width: 100%;
+}
+
+/* The highlight sweeps green -> orange from left to right without splitting
+   the run into per-character spans, which would disturb kerning and break the
+   pixel match. One 200%-wide two-stop gradient is clipped to the glyphs and
+   slid from right to left, moving the colour boundary left to right. */
+.hero__highlight {
+  color: var(--orange);
+}
+
+@supports ((background-clip: text) or (-webkit-background-clip: text)) {
+  .hero__highlight {
+    background-image: linear-gradient(
+      90deg,
+      var(--orange) 0%,
+      var(--orange) 47%,
+      var(--sovhi-green) 53%,
+      var(--sovhi-green) 100%
+    );
+    background-size: 200% 100%;
+    background-position: 100% 0;
+    background-repeat: no-repeat;
+    -webkit-background-clip: text;
+    background-clip: text;
+    color: transparent;
+    -webkit-text-fill-color: transparent;
+    transition: background-position var(--t-sweep-dur) cubic-bezier(0.4, 0, 0.2, 1);
+  }
+
+  .hero__highlight[data-lit="true"] {
+    background-position: 0 0;
+  }
+}
+
+.hero__cta {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: clamp(200px, 20%, 270px);
+  height: clamp(48px, 4.8vw, 65px);
+  margin: clamp(10px, 1.1029vw, 15px) 0 0;
+  background: var(--sovhi-green);
+  border-radius: 35px;
+  font-size: var(--fs-cta);
+  line-height: var(--lh-auto);
+  font-weight: 800;
+  color: var(--cream);
+  text-decoration: none;
+  border: 0;
+  cursor: pointer;
+  font-family: inherit;
+  white-space: nowrap;
+  transition: background-color 320ms ease;
+  will-change: transform, opacity;
+}
+
+.hero__cta:hover,
+.hero__cta:focus-visible {
+  background-color: var(--orange);
+}
+
+/* ===========================================================================
+   COMPACT WIDTHS
+   Below 700px the proportional ramp has bottomed out on its type floors, so
+   boxes stop being useful and the layout switches to content-driven heights.
+   =========================================================================== */
+
+@media (max-width: 700px) {
+  .hero__title {
+    height: auto;
+    min-height: 34px;
+  }
+
+  /* 1020:529 is too letterboxed to read at phone widths; open the frame up
+     so the subject survives the crop. */
+  .hero__figure {
+    width: calc(100% - 2 * var(--page-gutter));
+    aspect-ratio: 3 / 2;
+  }
+
+  .hero__lede {
+    width: calc(100% - 2 * var(--page-gutter));
+  }
+}
+
+@media (max-width: 560px) {
+  .hero__figure {
+    aspect-ratio: 4 / 3;
+  }
+
+  /* The three section links no longer fit beside the lockup. All three go
+     (note "Our team" sits in the actions group, not the links group), and the
+     lockup stops being centre-anchored, leaving wordmark + action.
+     TODO: replace with a real menu when the mobile design lands. */
+  .site-nav__links,
+  .site-nav__item--team {
+    display: none;
+  }
+
+  .site-nav__lockup {
+    position: static;
+    transform: none;
+    margin-right: auto;
+  }
+}
+
+/* ===========================================================================
+   REDUCED MOTION
+   Skip the intro and land on the designed end state.
+   =========================================================================== */
+
+@media (prefers-reduced-motion: reduce) {
+  .hero__highlight {
+    transition: none;
+    background-position: 0 0;
+  }
+  .hero__cta,
+  .site-nav__cta {
+    transition: none;
+  }
 }

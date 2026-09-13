@@ -12,6 +12,10 @@ const eslintConfig = defineConfig([
     "out/**",
     "build/**",
     "next-env.d.ts",
+    // Figma Dev Mode exports. Reference material, never compiled or imported.
+    // The export is not valid JSX (it emits style="..." strings on spans), so
+    // linting it only produces noise.
+    "design/**",
   ]),
 ]);
 
