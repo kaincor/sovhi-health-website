@@ -1494,13 +1494,19 @@ body {
   aspect-ratio: 1440 / 1190;
   background: var(--aud-bg);
   color: var(--aud-fg);
-  transition: background-color 0.5s ease, color 0.5s ease;
+  /* box-shadow must be in here. .bleed-bg paints everything outside the 1440
+     stage with a 100vmax shadow spread, so leaving it out made the sides snap
+     to the new colour while the centre cross-faded. */
+  transition: background-color 0.6s ease, color 0.6s ease,
+    box-shadow 0.6s ease;
 }
 
+/* y=69, not 64: the full-page frame says 64 but all three individual state
+   frames say 69, and the heading must not move between tabs. */
 .audiences__title {
   position: absolute;
   left: 0;
-  top: calc(64 * var(--u));
+  top: calc(69 * var(--u));
   width: 100%;
   height: calc(60 * var(--u));
   text-align: center;
@@ -1509,7 +1515,7 @@ body {
   font-weight: 800;
   color: var(--aud-fg);
   margin: 0;
-  transition: color 0.5s ease;
+  transition: color 0.6s ease;
 }
 
 .audiences__figure {
@@ -1525,16 +1531,24 @@ body {
   margin: 0;
 }
 
-/* Figma stacks two identical <img> here; that is an export artefact, one is
-   enough. The 1224x918 render sits at y=-153, i.e. 153 of the 307px of
-   vertical overflow, so 49.837% down. */
-.audiences__figure img {
+/* All four photos are mounted at once, stacked, and cross-faded by opacity.
+   Mounting on demand meant the incoming image had to download mid-transition,
+   which is what made the swap look like a glitch rather than a fade.
+
+   Every state renders its photo 1224 wide with its own vertical offset, and
+   every source ratio is under the container's 2.003, so `cover` scales by
+   width and the offset becomes object-position offset/(height-611). That
+   value is per-image, set inline from the data table. (Figma stacks two <img>
+   in a couple of states; that is an export artefact, one is enough.) */
+.audiences__slide {
   position: absolute;
   inset: 0;
+}
+
+.audiences__figure img {
   width: 100%;
   height: 100%;
   object-fit: cover;
-  object-position: center 49.837%;
   display: block;
 }
 
@@ -1567,7 +1581,7 @@ body {
   height: calc(43 * var(--u));
   border-radius: calc(25 * var(--u));
   background: var(--aud-pill);
-  transition: background-color 0.5s ease;
+  transition: background-color 0.6s ease;
   pointer-events: none;
 }
 
@@ -1589,7 +1603,7 @@ body {
   font-weight: 500;
   color: var(--aud-accent);
   white-space: nowrap;
-  transition: color 0.5s ease;
+  transition: color 0.6s ease;
 }
 
 .audiences__tab[aria-selected="true"] {
@@ -1713,4 +1727,203 @@ body {
   .audiences__tab {
     width: auto !important;
   }
+}
+
+/* ===========================================================================
+   DEPTH — "Uncommon depth for lasting steadiness"
+   Figma node 401-267: 1440x974 on Cream. Three overlapping cards, the lower
+   two rotated, dealt in from off-stage.
+
+     heading   753x50  at 108,56
+     lede      266x217 at 108,160
+     card 1    833x853       at 499,160        0deg   Sovhi Green
+     card 2    756.76x585.36 at 462,414.87    -4deg   Teal
+     card 3    690.91x290.79 at 456,681.40    -5deg   Light Blue
+
+   As in the stats section, Figma flattens each rotated group — card and both
+   text boxes each carry their own rotate() about their own top-left — so the
+   text offsets were recovered by inverting the rotation. Each card is then one
+   rotated unit that can be dealt as a whole.
+   =========================================================================== */
+
+.depth-shell {
+  container-type: inline-size;
+  width: 100%;
+}
+
+.depth {
+  --u: calc(100cqw / 1440);
+  position: relative;
+  width: 100%;
+  aspect-ratio: 1440 / 974;
+  background: var(--cream);
+  /* The cards wait off-stage past the bottom-right corner until dealt. */
+  overflow: clip;
+}
+
+.depth__title {
+  position: absolute;
+  left: calc(108 * var(--u));
+  top: calc(56 * var(--u));
+  width: calc(753 * var(--u));
+  height: calc(50 * var(--u));
+  font-size: calc(40 * var(--u));
+  line-height: var(--lh-auto);
+  font-weight: 800;
+  color: var(--orange);
+  margin: 0;
+}
+
+.depth__lede {
+  position: absolute;
+  left: calc(108 * var(--u));
+  top: calc(160 * var(--u));
+  width: calc(266 * var(--u));
+  font-size: calc(20 * var(--u));
+  line-height: var(--lh-auto);
+  font-weight: 500;
+  color: var(--orange);
+  margin: 0;
+}
+
+/* --- the three cards ------------------------------------------------------ */
+
+.depth__card {
+  position: absolute;
+  border-radius: calc(70 * var(--u));
+  box-shadow: var(--shadow-lg);
+  /* Figma rotates about the top-left, and the recovered text offsets assume
+     that origin. Motion owns `rotate`, so it must not be set in CSS. */
+  transform-origin: top left;
+  will-change: transform, opacity;
+}
+
+.depth__card-title {
+  position: absolute;
+  font-size: calc(32 * var(--u));
+  line-height: var(--lh-auto);
+  font-weight: 800;
+  margin: 0;
+}
+
+.depth__card-body {
+  position: absolute;
+  font-size: calc(24 * var(--u));
+  line-height: var(--lh-auto);
+  font-weight: 500;
+  margin: 0;
+}
+
+.depth__card--adaptive {
+  left: calc(499 * var(--u));
+  top: calc(160 * var(--u));
+  width: calc(833 * var(--u));
+  height: calc(853 * var(--u));
+  background: var(--sovhi-green);
+  color: var(--light-blue);
+}
+.depth__card--adaptive .depth__card-title {
+  left: calc(74 * var(--u));
+  top: calc(75 * var(--u));
+  width: calc(670 * var(--u));
+}
+.depth__card--adaptive .depth__card-body {
+  left: calc(74 * var(--u));
+  top: calc(127 * var(--u));
+  width: calc(670 * var(--u));
+}
+
+.depth__card--baseline {
+  left: calc(462 * var(--u));
+  top: calc(414.87 * var(--u));
+  width: calc(756.76 * var(--u));
+  height: calc(585.36 * var(--u));
+  background: var(--teal);
+  color: var(--sovhi-green);
+}
+.depth__card--baseline .depth__card-title {
+  left: calc(79.62 * var(--u));
+  top: calc(70.17 * var(--u));
+  width: calc(563.68 * var(--u));
+}
+.depth__card--baseline .depth__card-body {
+  left: calc(82.01 * var(--u));
+  top: calc(121.94 * var(--u));
+  width: calc(563.68 * var(--u));
+}
+
+.depth__card--pathway {
+  left: calc(456 * var(--u));
+  top: calc(681.4 * var(--u));
+  width: calc(690.91 * var(--u));
+  height: calc(290.79 * var(--u));
+  background: var(--light-blue);
+  color: var(--turquoise);
+}
+.depth__card--pathway .depth__card-title {
+  left: calc(91.71 * var(--u));
+  top: calc(77.4 * var(--u));
+  width: calc(563.68 * var(--u));
+}
+.depth__card--pathway .depth__card-body {
+  left: calc(92.77 * var(--u));
+  top: calc(129.19 * var(--u));
+  width: calc(563.68 * var(--u));
+}
+
+/* ===========================================================================
+   DEPTH — COMPACT
+   Overlapping rotated cards need the width to read as deliberate rather than
+   broken. Below 1180 they stack upright at full width.
+   =========================================================================== */
+
+@media (max-width: 1179px) {
+  .depth {
+    aspect-ratio: auto;
+    overflow: visible;
+    display: flex;
+    flex-direction: column;
+    padding: clamp(40px, 5vw, 64px) var(--page-gutter);
+    box-sizing: border-box;
+  }
+
+  .depth__title,
+  .depth__lede,
+  .depth__card,
+  .depth__card-title,
+  .depth__card-body {
+    position: static;
+    left: auto;
+    top: auto;
+    width: auto;
+    height: auto;
+  }
+
+  .depth__title {
+    font-size: clamp(26px, 2.9412vw, 40px);
+    margin-bottom: clamp(14px, 1.8vw, 24px);
+  }
+
+  .depth__lede {
+    max-width: 56ch;
+    font-size: clamp(16px, 1.7vw, 20px);
+    margin-bottom: clamp(24px, 3.4vw, 44px);
+  }
+
+  .depth__card {
+    display: flex;
+    flex-direction: column;
+    gap: clamp(8px, 1vw, 14px);
+    padding: clamp(24px, 3.4vw, 48px);
+    border-radius: clamp(28px, 4.8vw, 70px);
+    box-sizing: border-box;
+    transform-origin: center;
+  }
+
+  .depth__card + .depth__card {
+    margin-top: clamp(14px, 1.8vw, 24px);
+  }
+
+  .depth__card-title { font-size: clamp(21px, 2.4vw, 32px); }
+  .depth__card-body { font-size: clamp(16px, 1.8vw, 24px); }
 }

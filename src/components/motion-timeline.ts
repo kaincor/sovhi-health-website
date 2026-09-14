@@ -55,3 +55,17 @@ export const HOW = {
   reveal: { duration: 0.6, bounce: 0.37 },
   inViewAmount: 0.2,
 } as const;
+
+/**
+ * "Uncommon depth" section. Same deal-from-off-stage idea as the stats cards,
+ * but slower per card and in back-to-front order so each lands on top of the
+ * last: Adaptive Guidance, Baseline Clarity, A Pathway That's Yours.
+ * Last card lands at 0.1 + 2*0.45 + 0.85 = 1.85s.
+ */
+export const DEPTH = {
+  fade: { delay: 0, duration: 0.8 },
+  /* bounce matches the stats deal (0.28), which reads as momentum rather
+     than a spring. At 0.3 the last card overshot by 53px. */
+  deal: { base: 0.1, stagger: 0.45, duration: 0.85, bounce: 0.28 },
+  inViewAmount: 0.25,
+} as const;

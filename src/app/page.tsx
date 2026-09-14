@@ -3,6 +3,7 @@ import StatsSection from "@/components/StatsSection";
 import HowItWorks from "@/components/HowItWorks";
 import SignalsSection from "@/components/SignalsSection";
 import AudiencesSection from "@/components/AudiencesSection";
+import DepthSection from "@/components/DepthSection";
 
 export default function Home() {
   return (
@@ -12,6 +13,7 @@ export default function Home() {
       <HowItWorks />
       <SignalsSection />
       <AudiencesSection />
+      <DepthSection />
     </main>
   );
 }

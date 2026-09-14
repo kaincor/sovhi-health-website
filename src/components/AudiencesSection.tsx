@@ -1,8 +1,8 @@
 "use client";
 
 import Image from "next/image";
-import { useCallback, useLayoutEffect, useRef, useState } from "react";
-import { AnimatePresence, motion, useReducedMotion } from "motion/react";
+import { useCallback, useEffect, useLayoutEffect, useRef, useState } from "react";
+import { AnimatePresence, motion, useInView, useReducedMotion } from "motion/react";
 
 /**
  * "One problem. Four places to intervene".
@@ -10,22 +10,28 @@ import { AnimatePresence, motion, useReducedMotion } from "motion/react";
  * Selecting a tab changes the background, photo and copy. The bar never moves
  * or fades — only its colours cross-fade and the highlight pill slides.
  *
- * !! THEME COLOURS ARE PROVISIONAL !!
- * Only the Employers state has machine-generated Figma values; the other three
- * are read off the renders. `pill` / `pillFg` in particular disagree between
- * sources: the JSX gives a dark pill with cream text, which matches the
- * Providers and Public Health renders, but the Employers and Payers renders
- * look like a light pill with coloured text. Everything else is built around
- * this table, so correcting it is a four-line change.
+ * Every value below is from Figma Dev Mode for that state — all four states
+ * were exported, so nothing here is inferred. The rule turned out to be:
+ * active pill = the state's accent colour with Cream text; inactive labels =
+ * the same accent on the Cream bar.
+ *
+ * Tab widths tile the bar exactly: 5 + 154 + 193 + 188 + 135 + 5 = 680.
+ *
+ * Each state crops its photo differently. Figma renders every image 1224 wide
+ * and offsets it vertically; since all four source ratios are below the
+ * container's 2.003, `cover` scales by width, so the offset converts to an
+ * object-position of offset / (renderedHeight - 611).
  */
 type Audience = {
   id: string;
   tab: string;
-  /** Figma tile width inside the 680 bar: 154 | 193.5 | 187 | 135.5 = 670. */
+  /** Figma tile width inside the 680 bar: 154 | 193 | 188 | 135 = 670. */
   tabWidth: number;
   title: string;
   body: string;
   image: string;
+  /** vertical object-position reproducing Figma's crop for this state */
+  cropY: string;
   /** section background */
   bg: string;
   /** heading and copy on that background */
@@ -45,8 +51,8 @@ const AUDIENCES: readonly Audience[] = [
     tab: "Employers & HR",
     title: "Catch burnout before it becomes turnover",
     body: "Identify patterns of stress, disconnection, and wellbeing risk before they become attrition, absence, or rising costs.",
-    // TODO: awaiting the desk-with-code photo; placeholder until it lands.
-    image: "/images/making-music.jpg",
+    image: "/images/woman-coding.jpg",
+    cropY: "49.837%", // 1224x918 at -153
     bg: "var(--sovhi-green)",
     fg: "var(--cream)",
     accent: "var(--sovhi-green)",
@@ -55,26 +61,26 @@ const AUDIENCES: readonly Audience[] = [
   },
   {
     id: "payers",
-    tabWidth: 193.5,
+    tabWidth: 193,
     tab: "Health Plans & Payers",
     title: "See risk before utilization",
     body: "Surface upstream signals that can help identify members who may need support earlier.",
-    // TODO: awaiting the runners photo.
-    image: "/images/making-music.jpg",
+    image: "/images/running-on-track.jpg",
+    cropY: "25.243%", // 1224x817 at -52
     bg: "var(--orange)",
     fg: "var(--cream)",
     accent: "var(--orange)",
-    pill: "var(--rust)",
+    pill: "var(--orange)",
     pillFg: "var(--cream)",
   },
   {
     id: "providers",
-    tabWidth: 187,
+    tabWidth: 188,
     tab: "Healthcare Providers",
     title: "Bring context into care",
     body: "Understand the conditions surrounding a patient's health alongside the clinical picture.",
-    // TODO: awaiting the doctor photo.
-    image: "/images/making-music.jpg",
+    image: "/images/healthcare-providers.png",
+    cropY: "66.667%", // 1224x689 at -52
     bg: "var(--light-blue)",
     fg: "var(--turquoise)",
     accent: "var(--turquoise)",
@@ -83,11 +89,12 @@ const AUDIENCES: readonly Audience[] = [
   },
   {
     id: "public",
-    tabWidth: 135.5,
+    tabWidth: 135,
     tab: "Public Health",
     title: "Move prevention upstream",
     body: "Measure the conditions shaping community wellbeing and identify where intervention can begin.",
     image: "/images/making-music.jpg",
+    cropY: "16.938%", // 1224x918 at -52
     bg: "var(--teal)",
     fg: "var(--sovhi-green)",
     accent: "var(--sovhi-green)",
@@ -96,10 +103,40 @@ const AUDIENCES: readonly Audience[] = [
   },
 ];
 
+/** Dwell time before the tabs advance on their own. */
+const AUTOPLAY_MS = 4000;
+
 export default function AudiencesSection() {
   const reduceMotion = useReducedMotion();
   const [active, setActive] = useState(0);
   const current = AUDIENCES[active];
+
+  /* Advances on its own every 4s. The timer is keyed on `active`, so any click
+     restarts the countdown rather than fighting it. Paused off-screen so the
+     section is not cycling where nobody can see it, and disabled outright
+     under reduced-motion, where unrequested movement is the whole complaint. */
+  const sectionRef = useRef<HTMLElement | null>(null);
+  const inView = useInView(sectionRef, { amount: 0.4 });
+
+  /* Bumped on every click. Keying the timer on `active` alone is not enough:
+     clicking the tab that is already selected sets the same value, React bails
+     out of the re-render, the effect never re-runs, and the old countdown
+     keeps going — so that click would be ignored and the section could advance
+     a fraction of a second later. */
+  const [nudge, setNudge] = useState(0);
+  const select = useCallback((i: number) => {
+    setActive(i);
+    setNudge((n) => n + 1);
+  }, []);
+
+  useEffect(() => {
+    if (reduceMotion || !inView) return;
+    const id = setTimeout(
+      () => setActive((i) => (i + 1) % AUDIENCES.length),
+      AUTOPLAY_MS,
+    );
+    return () => clearTimeout(id);
+  }, [active, nudge, inView, reduceMotion]);
 
   /* The pill is placed from the selected tab's measured box rather than from
      hard-coded offsets, so it stays correct when the bar becomes a 2x2 grid
@@ -129,11 +166,19 @@ export default function AudiencesSection() {
     return () => ro.disconnect();
   }, [measure]);
 
-  const swap = { duration: reduceMotion ? 0 : 0.3, ease: "easeOut" as const };
+  /* Out fast, in a touch slower and behind the background, so the copy hands
+     over rather than blinking. */
+  const swapIn = {
+    duration: reduceMotion ? 0 : 0.3,
+    delay: reduceMotion ? 0 : 0.1,
+    ease: "easeOut" as const,
+  };
+  const swapOut = { duration: reduceMotion ? 0 : 0.18, ease: "easeIn" as const };
 
   return (
     <div className="audiences-shell">
       <section
+        ref={sectionRef}
         className="audiences bleed-bg"
         aria-labelledby="audiences-title"
         id="for-organizations"
@@ -151,26 +196,33 @@ export default function AudiencesSection() {
           One problem. Four places to intervene
         </h2>
 
-        {/* Cross-fades: the old photo leaves while the new one arrives, both
-            stacked in the same clipped box so the card never collapses. */}
+        {/* All four stay mounted and cross-fade on opacity. Swapping a single
+            <Image> through AnimatePresence meant the incoming photo began
+            downloading as the fade started, which read as a jump rather than
+            a fade. */}
         <figure className="audiences__figure">
-          <AnimatePresence initial={false} mode="popLayout">
+          {AUDIENCES.map((a, i) => (
             <motion.div
-              key={current.id}
-              initial={reduceMotion ? { opacity: 1 } : { opacity: 0 }}
-              animate={{ opacity: 1 }}
-              exit={{ opacity: 0 }}
-              transition={swap}
-              style={{ position: "absolute", inset: 0 }}
+              key={a.id}
+              className="audiences__slide"
+              initial={false}
+              animate={{ opacity: i === active ? 1 : 0 }}
+              transition={{
+                duration: reduceMotion ? 0 : 0.6,
+                ease: "easeInOut",
+              }}
+              aria-hidden={i !== active}
             >
               <Image
-                src={current.image}
+                src={a.image}
                 alt=""
                 fill
                 sizes="(max-width: 1179px) 92vw, 1224px"
+                style={{ objectPosition: `center ${a.cropY}` }}
+                priority={i === 0}
               />
             </motion.div>
-          </AnimatePresence>
+          ))}
         </figure>
 
         <div className="audiences__tabs" ref={barRef} role="tablist">
@@ -197,7 +249,7 @@ export default function AudiencesSection() {
               }}
               className="audiences__tab"
               style={{ width: `calc(${a.tabWidth} * var(--u))` }}
-              onClick={() => setActive(i)}
+              onClick={() => select(i)}
             >
               {a.tab}
             </button>
@@ -213,8 +265,8 @@ export default function AudiencesSection() {
             className="audiences__panel-title"
             initial={reduceMotion ? { opacity: 1 } : { opacity: 0 }}
             animate={{ opacity: 1 }}
-            exit={{ opacity: 0 }}
-            transition={swap}
+            exit={{ opacity: 0, transition: swapOut }}
+            transition={swapIn}
           >
             {current.title}
           </motion.h3>
@@ -226,8 +278,8 @@ export default function AudiencesSection() {
             className="audiences__panel-body"
             initial={reduceMotion ? { opacity: 1 } : { opacity: 0 }}
             animate={{ opacity: 1 }}
-            exit={{ opacity: 0 }}
-            transition={swap}
+            exit={{ opacity: 0, transition: swapOut }}
+            transition={swapIn}
           >
             {current.body}
           </motion.p>
