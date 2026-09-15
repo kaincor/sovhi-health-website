@@ -378,6 +378,111 @@ body {
   flex: none;
 }
 
+/* --- phone navbar parts --------------------------------------------------
+   All three are display:none above the breakpoint. They are declared here
+   rather than only inside the media query so the bar's own rules stay in one
+   place and the mobile block below only has to flip them on.
+   -------------------------------------------------------------------------- */
+
+.site-nav__menu-btn {
+  display: none;
+  align-items: center;
+  justify-content: center;
+  /* 40px square: below the 44px ideal, but the bar is 52px tall and this is
+     the largest target that leaves the pill its vertical breathing room. */
+  width: 40px;
+  height: 40px;
+  flex: none;
+  padding: 0;
+  background: none;
+  border: 0;
+  border-radius: 50%;
+  cursor: pointer;
+  color: var(--sovhi-green);
+  -webkit-tap-highlight-color: transparent;
+}
+
+.site-nav__bars {
+  position: relative;
+  display: block;
+  width: 18px;
+  height: 12px;
+}
+
+.site-nav__bars span {
+  position: absolute;
+  left: 0;
+  width: 100%;
+  height: 2px;
+  border-radius: 2px;
+  background: currentColor;
+  transition:
+    transform 260ms var(--ease-gentle),
+    opacity 160ms ease;
+}
+
+.site-nav__bars span:nth-child(1) { top: 0; }
+.site-nav__bars span:nth-child(2) { top: 5px; }
+.site-nav__bars span:nth-child(3) { top: 10px; }
+
+/* Open: the outer bars rotate onto the middle bar's line and it fades out,
+   leaving a cross. Both travel 5px because that is the gap the layout above
+   puts between each bar and the centre. */
+.site-nav__menu-btn[aria-expanded="true"] .site-nav__bars span:nth-child(1) {
+  transform: translateY(5px) rotate(45deg);
+}
+.site-nav__menu-btn[aria-expanded="true"] .site-nav__bars span:nth-child(2) {
+  opacity: 0;
+}
+.site-nav__menu-btn[aria-expanded="true"] .site-nav__bars span:nth-child(3) {
+  transform: translateY(-5px) rotate(-45deg);
+}
+
+/* Hangs off the bar, which is position:relative, so it spans the bar's width
+   and follows it wherever it sits. */
+.site-nav__menu {
+  display: none;
+  position: absolute;
+  top: calc(100% + 8px);
+  left: 0;
+  right: 0;
+  flex-direction: column;
+  padding: 8px;
+  background: var(--cream);
+  border-radius: var(--r-25);
+  box-shadow: var(--shadow-lg);
+}
+
+.site-nav__menu-item {
+  display: flex;
+  align-items: center;
+  /* 44px — the sheet has the room the bar does not, so these get a full
+     tap target. */
+  min-height: 44px;
+  padding-inline: 14px;
+  border-radius: 18px;
+  font-size: var(--fs-18);
+  line-height: var(--lh-auto);
+  font-weight: 500;
+  color: var(--sovhi-green);
+  text-decoration: none;
+  transition: background-color 200ms ease;
+}
+
+.site-nav__menu-item:hover,
+.site-nav__menu-item:focus-visible {
+  background: color-mix(in srgb, var(--sovhi-green) 10%, transparent);
+}
+
+.site-nav__scrim {
+  display: none;
+  position: fixed;
+  inset: 0;
+  z-index: -1;
+  background: color-mix(in srgb, var(--off-black) 34%, transparent);
+  pointer-events: auto;
+}
+
 .site-nav__actions {
   display: flex;
   align-items: center;
@@ -477,12 +582,21 @@ body {
 .thesis__eyebrow {
   display: inline-flex;
   align-items: center;
-  height: 31px;
+  justify-content: center;
+  text-align: center;
+  /* min-height, not height: the label is 41 characters and was wrapping to a
+     second line on a phone inside a pill locked at 31px, which clipped it.
+     The type ramp below keeps it to one line down to ~360px, and this makes
+     an overflow impossible rather than merely unlikely. */
+  min-height: 31px;
+  padding-block: 5px;
   padding-inline: clamp(14px, 1.5vw, 21px);
   border-radius: 35px;
   background: var(--orange);
   color: var(--cream);
-  font-size: clamp(12px, 1.0294vw, 14px);
+  /* Floor lowered from 12px so 41 tracked uppercase characters still fit one
+     line at 390px; the vw term reaches the old 12px again by ~430px. */
+  font-size: clamp(10px, 2.8vw, 14px);
   font-weight: 800;
   letter-spacing: 0.08em;
   text-transform: uppercase;
@@ -1612,19 +1726,77 @@ body {
     aspect-ratio: 4 / 3;
   }
 
-  /* The three section links no longer fit beside the lockup. All three go
-     (note "Our team" sits in the actions group, not the links group), and the
-     lockup stops being centre-anchored, leaving wordmark + action.
-     TODO: replace with a real menu when the mobile design lands. */
+  /* --- the phone navbar --------------------------------------------------
+     A conventional phone bar: hamburger, then the lockup, then whitespace,
+     then the CTA. The three inline links do not fit beside the lockup at
+     this width, so they move into the sheet the hamburger opens — which is
+     also where "Our team" goes, even though it lives in the actions group
+     rather than the links group on the wide bar.
+
+     The bar also stops tucking away on scroll here (see canTuck in
+     SiteHeader). On the wide layout hiding it on the way down is a nice
+     touch because every link has an inline equivalent further down the
+     page; on a phone it would take the only route to the menu off screen.
+     --------------------------------------------------------------------- */
+
+  .site-nav {
+    /* Taller than the fluid 38px the wide ramp bottoms out at: that is too
+       short to hold a 40px button and a tappable CTA. */
+    height: 52px;
+    padding-left: 6px;
+    padding-right: 6px;
+    gap: 4px;
+  }
+
+  .site-nav__menu-btn {
+    display: flex;
+  }
+
+  .site-nav__menu {
+    display: flex;
+  }
+
+  .site-nav__scrim {
+    display: block;
+  }
+
   .site-nav__links,
   .site-nav__item--team {
     display: none;
   }
 
+  /* Out of the absolute centre and into the flow, immediately after the
+     hamburger. margin-right:auto is the whitespace that pushes the CTA to
+     the far end. */
   .site-nav__lockup {
     position: static;
     transform: none;
     margin-right: auto;
+    gap: 4px;
+  }
+
+  .site-nav__brand {
+    font-size: 17px;
+  }
+
+  .site-nav__mark {
+    width: 15px;
+  }
+
+  .site-nav__cta {
+    width: auto;
+    height: 36px;
+    padding-inline: 14px;
+    border-radius: 35px;
+    font-size: 14px;
+    box-shadow: var(--shadow-sm);
+  }
+}
+
+/* The bars fold rather than snap; with motion off they just swap state. */
+@media (prefers-reduced-motion: reduce) {
+  .site-nav__bars span {
+    transition: none;
   }
 }
 
