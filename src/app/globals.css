@@ -1726,6 +1726,16 @@ body {
     aspect-ratio: 4 / 3;
   }
 
+  /* The eyebrow goes, but its box stays. visibility rather than display:none
+     precisely because the space is the point: the phone navbar is fixed at
+     the top of the screen and the headline was landing too close under it,
+     so the pill's footprint is kept as breathing room. visibility also takes
+     it out of the accessibility tree, so it is genuinely gone, not just
+     transparent. */
+  .thesis__eyebrow {
+    visibility: hidden;
+  }
+
   /* --- the phone navbar --------------------------------------------------
      A conventional phone bar: hamburger, then the lockup, then whitespace,
      then the CTA. The three inline links do not fit beside the lockup at
