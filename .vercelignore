@@ -1,0 +1,32 @@
+# Vercel's uploader honours .gitignore, which excludes the brand fonts on
+# purpose — this repo is public and the Graphik / TT Commons Pro EULAs cover
+# serving from our own host, not redistribution in a public repo.
+#
+# That exclusion is right for git and wrong for deploy: without these files
+# the deployed site falls back to a system sans and loses the whole brand
+# voice. This file re-includes them and restates the other exclusions.
+
+node_modules
+.next
+out
+build
+coverage
+.DS_Store
+*.pem
+*.tsbuildinfo
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+.pnpm-debug.log*
+.env*
+.vercel
+.cursor
+
+# Figma exports and the investor one-pager. Reference material, never served,
+# and design/ holds a PDF marked CONFIDENTIAL — keep it off the host.
+design
+
+# The fonts DO ship. Both lines are needed: the first re-includes the
+# directory, the second its contents.
+!public/fonts
+!public/fonts/**

@@ -1,26 +1,3790 @@
 @import "tailwindcss";
 
+/* ---------------------------------------------------------------------------
+   Brand type: one family, "Sovhi", assembled from two typefaces.
+
+   TT Commons Pro carries all text. Graphik supplies 12 characters:
+       ! " $ % ( ) * + - / 4 =
+
+   IMPORTANT — the Graphik override is a TEMPORARY workaround, not a design
+   decision. The TT Commons Pro files here are Fontspring DEMO builds, which
+   replace exactly those 12 glyphs (yes, including the numeral 4) with a
+   "DEMO" watermark leaf. Graphik is standing in for the watermarked slots.
+
+   When the licensed TT Commons Pro web kit lands, DELETE the Graphik block
+   below. Licensed TT Commons has all 12 characters, and Graphik's versions
+   are visibly wider (period 11.28 vs 7.84 at 40px), so keeping the override
+   would ship mismatched punctuation and a mismatched 4 forever.
+
+   Order matters while it stays: when faces in one family share a weight and
+   their unicode-ranges overlap, CSS checks them in REVERSE declaration order
+   (CSS Fonts L4 §4.5). The Graphik faces must stay below the TT Commons
+   faces or they will never win for their range.
+
+   Each src lists .woff2 first, then .otf, so the licensed web kit takes
+   over automatically once it replaces the local desktop/demo files.
+   --------------------------------------------------------------------------- */
+
+/* --- Text face: TT Commons Pro ------------------------------------------- */
+
+@font-face {
+  font-family: "Sovhi";
+  src:
+    url("/fonts/TTCommonsPro-Medium.woff2") format("woff2"),
+    url("/fonts/TTCommonsPro-Medium.otf") format("opentype");
+  font-weight: 500;
+  font-style: normal;
+  font-display: swap;
+}
+
+@font-face {
+  font-family: "Sovhi";
+  src:
+    url("/fonts/TTCommonsPro-MediumItalic.woff2") format("woff2"),
+    url("/fonts/TTCommonsPro-MediumItalic.otf") format("opentype");
+  font-weight: 500;
+  font-style: italic;
+  font-display: swap;
+}
+
+@font-face {
+  font-family: "Sovhi";
+  src:
+    url("/fonts/TTCommonsPro-ExtraBold.woff2") format("woff2"),
+    url("/fonts/TTCommonsPro-ExtraBold.otf") format("opentype");
+  font-weight: 800;
+  font-style: normal;
+  font-display: swap;
+}
+
+@font-face {
+  font-family: "Sovhi";
+  src:
+    url("/fonts/TTCommonsPro-ExtraBoldItalic.woff2") format("woff2"),
+    url("/fonts/TTCommonsPro-ExtraBoldItalic.otf") format("opentype");
+  font-weight: 800;
+  font-style: italic;
+  font-display: swap;
+}
+
+/* --- Glyph overrides: Graphik -------------------------------------------- */
+
+/* The DEMO build watermarks 28 printable ASCII characters, verified by
+   advance width (every watermarked glyph is 598 units where real glyphs vary):
+     U+21-2B   ! " # $ % & ' ( ) * +
+     U+2D      -           U+2F   /
+     U+34      4           U+3C-3E  < = >
+     U+40      @           U+5B-60  [ \ ] ^ _ `
+     U+7B-7E   { | } ~
+   Figma independently routes @ & ' - + $ / 4 to Graphik, which agrees.
+
+   The last two lines are a separate concern and should OUTLIVE the demo swap.
+   Figma sets the footer's (c) in "Actay Wide"; we use Graphik instead, which
+   covers U+A9 along with (R), (TM) and the degree sign. TT
+   Commons Pro has no glyphs above U+007E in either build we have, so curly
+   quotes, en/em dashes and the ellipsis drop to a system font mid-word. Check
+   whether the licensed kit covers these; if it does, drop that line too. */
+
+@font-face {
+  font-family: "Sovhi";
+  src:
+    url("/fonts/Graphik-Regular.woff2") format("woff2"),
+    url("/fonts/Graphik-Regular.otf") format("opentype");
+  font-weight: 500;
+  font-style: normal;
+  font-display: swap;
+  unicode-range:
+    U+21-2B, U+2D, U+2F, U+34, U+3C-3E, U+40, U+5B-60, U+7B-7E,
+    U+A9, U+AE, U+B0, U+2122,
+    U+2013-2014, U+2018-2019, U+201C-201D, U+2026;
+}
+
+@font-face {
+  font-family: "Sovhi";
+  src:
+    url("/fonts/Graphik-RegularItalic.woff2") format("woff2"),
+    url("/fonts/Graphik-RegularItalic.otf") format("opentype");
+  font-weight: 500;
+  font-style: italic;
+  font-display: swap;
+  unicode-range:
+    U+21-2B, U+2D, U+2F, U+34, U+3C-3E, U+40, U+5B-60, U+7B-7E,
+    U+A9, U+AE, U+B0, U+2122,
+    U+2013-2014, U+2018-2019, U+201C-201D, U+2026;
+}
+
+@font-face {
+  font-family: "Sovhi";
+  src:
+    url("/fonts/Graphik-Semibold.woff2") format("woff2"),
+    url("/fonts/Graphik-Semibold.otf") format("opentype");
+  font-weight: 800;
+  font-style: normal;
+  font-display: swap;
+  unicode-range:
+    U+21-2B, U+2D, U+2F, U+34, U+3C-3E, U+40, U+5B-60, U+7B-7E,
+    U+A9, U+AE, U+B0, U+2122,
+    U+2013-2014, U+2018-2019, U+201C-201D, U+2026;
+}
+
 :root {
+  /* Redesign tokens go here — new palette, gutters, and any per-section
+     custom properties. The old scheme was removed with the sections. */
   --background: #ffffff;
-  --foreground: #171717;
+  --foreground: #1e1e21;
 }
 
 @theme inline {
   --color-background: var(--background);
   --color-foreground: var(--foreground);
-  --font-sans: var(--font-geist-sans);
-  --font-mono: var(--font-geist-mono);
-}
-
-@media (prefers-color-scheme: dark) {
-  :root {
-    --background: #0a0a0a;
-    --foreground: #ededed;
-  }
+  --font-sans: "Sovhi", sans-serif;
 }
 
 body {
   background: var(--background);
   color: var(--foreground);
-  font-family: Arial, Helvetica, sans-serif;
+  font-family: "Sovhi", sans-serif;
+  font-weight: 500;
+}
+
+/* ===========================================================================
+   DESIGN TOKENS
+   Palette and layout values from the Figma file (node 382-111).
+
+   RESPONSIVE STRATEGY
+   The design is authored at a fixed 1440px stage. Every dimension below is
+   written as min(<figma px>, <percentage>) or clamp(<floor>, <vw>, <figma px>),
+   with the fluid term deliberately overshooting the Figma value before 1440px
+   is reached. That makes the layout exact at >=1440 (the clamp pins it) and
+   proportional below, with floors so type never becomes illegible. Widths use
+   percentages rather than vw so a scrollbar cannot cause overflow.
+   =========================================================================== */
+
+:root {
+  /* Palette — names match the Figma variables exactly. All eight are used
+     across the full-page frame (node 412-802). */
+  --cream: #eef0e9;
+  --sovhi-green: #0b5f5a;
+  --orange: #d97b31;
+  --teal: #26bb93;
+  --off-black: #1e1e21;
+  --rust: #693c18;
+  --light-blue: #8adde4;
+  --turquoise: #41686c;
+
+  /* Side borders. --page-gutter is the 108px border every section respects
+     (confirmed against the full-page Figma frame, node 412-802); the hero
+     image uses its own wider 210px inset. Both collapse proportionally on
+     narrow screens. */
+  --page-width: 1440px;
+  --page-gutter: clamp(20px, 7.6%, 108px);
+
+  /* Type. TT Commons Pro is ascender 1000 / descender -250 / lineGap 0 at
+     1000 upem, so Figma's "auto" line height is exactly 1.25em. Setting the
+     ratio rather than a px value keeps it correct at every size. */
+  --lh-auto: 1.25;
+
+  /* Every size present in the full-page frame. Each vw term is size/1360*100,
+     which overshoots the cap so >=1440 pins the exact Figma value; the floor
+     is where it stops shrinking so text stays legible on phones. */
+  --fs-64: clamp(34px, 4.7059vw, 64px);
+  --fs-48: clamp(28px, 3.5294vw, 48px);
+  --fs-40: clamp(26px, 2.9412vw, 40px);
+  --fs-36: clamp(24px, 2.6471vw, 36px);
+  --fs-32: clamp(22px, 2.3529vw, 32px);
+  --fs-30: clamp(21px, 2.2059vw, 30px);
+  --fs-24: clamp(17px, 1.7647vw, 24px);
+  --fs-20: clamp(16px, 1.4706vw, 20px);
+  --fs-18: clamp(15px, 1.3235vw, 18px);
+  --fs-16: clamp(13px, 1.1765vw, 16px);
+
+  /* Hero aliases, kept so the hero reads semantically. */
+  --fs-title: var(--fs-48);
+  --fs-lede: var(--fs-24);
+  --fs-cta: var(--fs-20);
+  --fs-nav: var(--fs-16);
+  --fs-brand: var(--fs-24);
+
+  /* Corner radii, fluid on the same principle. */
+  --r-70: clamp(24px, 5.1471vw, 70px);
+  --r-35: clamp(16px, 2.5735vw, 35px);
+  --r-30: clamp(14px, 2.2059vw, 30px);
+  --r-25: clamp(12px, 1.8382vw, 25px);
+
+  /* Shadows, verbatim from Figma. The footer panel casts upward; the cards on
+     the Light-Blue section use a turquoise-tinted shadow rather than black. */
+  --shadow-sm: 0 5px 10px rgba(0, 0, 0, 0.25);
+  --shadow-md: 0 10px 15px rgba(0, 0, 0, 0.25);
+  --shadow-lg: 0 10px 20px rgba(0, 0, 0, 0.25);
+  --shadow-flat: 0 10px 10px rgba(0, 0, 0, 0.25);
+  --shadow-up: 0 -5px 10px rgba(0, 0, 0, 0.25);
+  --shadow-tint: 0 10px 20px rgba(65.2, 103.39, 106.61, 0.5);
+  --text-shadow-strong: 0 5px 10px rgba(0, 0, 0, 0.8);
+
+  /* Motion timeline. Ordered as specified: image, then nav at 1s, then the
+     text stagger, then the highlight sweep once the CTA has landed. */
+  --t-sweep-dur: 2s;
+  --ease-gentle: cubic-bezier(0.22, 1, 0.36, 1);
+}
+
+/* ===========================================================================
+   PAGE SHELL
+   =========================================================================== */
+
+html {
+  /* The design has no horizontal overflow at any width; make that a hard
+     guarantee so a stray wide child can never produce a sideways scrollbar. */
+  overflow-x: hidden;
+}
+
+body {
+  background: var(--cream);
+  color: var(--sovhi-green);
+}
+
+.page {
+  width: 100%;
+  max-width: var(--page-width);
+  margin-inline: auto;
+  position: relative;
+}
+
+
+/* ===========================================================================
+   SECTION SCAFFOLD
+   Every section in the full-page frame is 1440 wide with a 108px side border
+   and its own background. These two classes carry that, so a section's own
+   rules only describe its contents.
+   =========================================================================== */
+
+.section {
+  position: relative;
+  width: 100%;
+  background: var(--cream);
+}
+
+.section__inner {
+  width: 100%;
+  max-width: var(--page-width);
+  margin-inline: auto;
+  padding-inline: var(--page-gutter);
+  box-sizing: border-box;
+}
+
+/* Paints a section's background out to the viewport edges while its content
+   stays on the 1440 stage. box-shadow is paint-only, so nothing in the
+   verified layout moves, and it adds no scrollable overflow the way a
+   negative-margin bleed (margin-inline: calc(50% - 50vw)) would — that
+   approach overshoots by the scrollbar width. clip-path trims the spread
+   vertically so it cannot bleed into the sections above and below.
+
+   Usage: add .bleed-bg and set --bleed-color to the section's background. */
+.bleed-bg {
+  box-shadow: 0 0 0 100vmax var(--bleed-color, transparent);
+  clip-path: inset(0 -100vmax);
+}
+
+.section--green { background: var(--sovhi-green); color: var(--cream); }
+.section--orange { background: var(--orange); color: var(--cream); }
+.section--light-blue { background: var(--light-blue); color: var(--turquoise); }
+
+/* ===========================================================================
+   NAV
+   Figma: a 1392x45 bar at (24,16) in the 1440 stage, with its items at fixed
+   offsets. The dock is a full-width fixed strip that centres the bar, so the
+   bar itself is free to carry the drop-in and scroll-away transform.
+   =========================================================================== */
+
+.site-nav-dock {
+  position: fixed;
+  top: 16px;
+  left: 0;
+  right: 0;
+  z-index: 100;
+  display: flex;
+  justify-content: center;
+  pointer-events: none;
+}
+
+.site-nav {
+  pointer-events: auto;
+  position: relative;
+  display: flex;
+  align-items: center;
+  width: min(1392px, calc(100% - 48px));
+  height: clamp(38px, 3.3vw, 45px);
+  padding-left: min(9px, 0.8%);
+  padding-right: min(7.46px, 0.7%);
+  background: var(--cream);
+  border-radius: 70px;
+  box-shadow: var(--shadow-sm);
+  will-change: transform;
+}
+
+/* Figma spaces the links with fixed-width boxes rather than gaps. The boxes
+   are reproduced so positions match at 1440; min-width keeps the label from
+   being crushed once the fluid width drops below the text. */
+.site-nav__links {
+  display: flex;
+  align-items: center;
+  align-self: stretch;
+  gap: clamp(10px, 1.9vw, 25px);
+}
+
+.site-nav__item {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  height: 100%;
+  min-width: max-content;
+  text-align: center;
+  font-size: var(--fs-nav);
+  line-height: var(--lh-auto);
+  font-weight: 500;
+  color: var(--sovhi-green);
+  text-decoration: none;
+}
+
+/* vw rather than %, because these sit inside content-sized flex wrappers.
+   Each fluid term overshoots its cap so >=1440 pins the exact Figma width. */
+.site-nav__item--works { width: clamp(86px, 9.5vw, 130px); }
+.site-nav__item--who   { width: clamp(79px, 9.5vw, 130px); }
+.site-nav__item--team  { width: clamp(64px, 6.8vw, 92px); }
+
+/* Figma centres the wordmark's text box on x=744 and drops the glyph at 796,
+   putting the lockup 35.7px right of the bar's centre. Corrected here: the
+   wordmark and glyph are one unit, centred on the bar. */
+.site-nav__lockup {
+  position: absolute;
+  left: 50%;
+  transform: translateX(-50%);
+  display: flex;
+  align-items: center;
+  gap: clamp(3px, 0.32vw, 4.46px);
+  white-space: nowrap;
+}
+
+.site-nav__brand {
+  font-size: var(--fs-brand);
+  line-height: var(--lh-auto);
+  font-weight: 800;
+  color: var(--sovhi-green);
+}
+
+.site-nav__mark {
+  display: block;
+  width: clamp(15px, 1.4vw, 19px);
+  height: auto;
+  flex: none;
+}
+
+.site-nav__actions {
+  display: flex;
+  align-items: center;
+  align-self: stretch;
+  gap: clamp(8px, 1.5vw, 19.94px);
+  margin-left: auto;
+}
+
+.site-nav__cta {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: clamp(100px, 9.5vw, 127.6px);
+  min-width: max-content;
+  height: clamp(20px, 2vw, 27px);
+  padding-inline: 10px;
+  background: var(--sovhi-green);
+  border-radius: 35px;
+  box-shadow: var(--shadow-lg);
+  font-size: var(--fs-nav);
+  line-height: var(--lh-auto);
+  font-weight: 500;
+  color: var(--cream);
+  text-decoration: none;
+  border: 0;
+  cursor: pointer;
+  font-family: inherit;
+  white-space: nowrap;
+  transition: background-color 320ms ease;
+}
+
+.site-nav__cta:hover,
+.site-nav__cta:focus-visible {
+  background-color: var(--orange);
+}
+
+/* ===========================================================================
+   SCREEN-READER-ONLY
+   For headings that must exist for document structure but are not part of the
+   visual design — the problem/thesis pair labels itself with two eyebrows
+   rather than one heading, so the h2 tying them together is hidden.
+   =========================================================================== */
+
+.sr-only {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  margin: -1px;
+  padding: 0;
+  overflow: hidden;
+  clip-path: inset(50%);
+  white-space: nowrap;
+  border: 0;
+}
+
+/* ===========================================================================
+   INVESTOR BLOCK — shared notes
+   Five sections lifted from design/Sovhi Health Investor OnePager 6.pdf:
+   thesis hero, pathway, problem/thesis, stat band, platform.
+
+   The one-pager is an editorial broadsheet — high-contrast serif, ruled
+   cells, boxed everything. Almost none of that is reproduced. These sections
+   borrow its ARGUMENT and its NUMBERS and are drawn with the existing eight
+   palette variables, TT Commons, --r-35/--r-25 and the same fluid clamp()
+   ramp as every other section, so the page stays one artefact.
+
+   The exception is the stat band, which was asked for with its two rules
+   intact. That is the only place on the site that draws a line, which is
+   what makes it read as emphasis rather than as a borrowed style.
+
+   Unlike the Figma-traced sections these have no fixed source frame, so they
+   are laid out in flow and grid rather than absolutely on a --u unit.
+   =========================================================================== */
+
+/* ===========================================================================
+   THESIS HERO — "Healthcare measures disease"
+   =========================================================================== */
+
+.thesis {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  text-align: center;
+  padding-inline: var(--page-gutter);
+  /* Deliberately shallow. This section states the claim and then gets out of
+     the way: the pathway below it is the focal point of the landing screen,
+     so the hero is sized to leave the first stage cards visible without
+     scrolling. The 72px floor is the nav's clearance — it is fixed and
+     bottoms out at 54px on narrow screens — and cannot go lower. */
+  padding-top: clamp(72px, 7vw, 96px);
+  padding-bottom: clamp(20px, 2.4vw, 36px);
+  box-sizing: border-box;
+}
+
+/* Borrows the footer pill's geometry (35px pill, tracked caps) so the one new
+   badge on the site is not a new shape. */
+.thesis__eyebrow {
+  display: inline-flex;
+  align-items: center;
+  height: 31px;
+  padding-inline: clamp(14px, 1.5vw, 21px);
+  border-radius: 35px;
+  background: var(--orange);
+  color: var(--cream);
+  font-size: clamp(12px, 1.0294vw, 14px);
+  font-weight: 800;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  margin: 0;
+  will-change: transform, opacity;
+}
+
+.thesis__title {
+  /* 19ch keeps the headline to three lines at 1440 and breaks after
+     "disease." on the first, which is where the argument pivots. */
+  /* 30ch, not 19: at --fs-40 the sentence sets to two lines instead of
+     three, which is most of the height this section gave back. */
+  max-width: 30ch;
+  margin: clamp(12px, 1.3vw, 18px) 0 0;
+  font-size: var(--fs-40);
+  line-height: 1.14;
+  font-weight: 800;
+  color: var(--sovhi-green);
+  text-wrap: balance;
+  will-change: transform, opacity;
+}
+
+/* The one-pager sets this clause in rust italic. Orange is the site's
+   equivalent accent and TT Commons ships an ExtraBold Italic, so the emphasis
+   survives the translation without importing a second typeface. */
+.thesis__turn {
+  color: var(--orange);
+  font-style: italic;
+}
+
+.thesis__lede {
+  max-width: 74ch;
+  margin: clamp(10px, 1vw, 15px) 0 0;
+  font-size: var(--fs-18);
+  line-height: var(--lh-auto);
+  font-weight: 500;
+  color: var(--turquoise);
+  text-wrap: pretty;
+  will-change: transform, opacity;
+}
+
+/* ===========================================================================
+   PATHWAY — "Stress doesn't stay psychological"
+   The one-pager's four-stage chain, rebuilt as cards so it belongs to the
+   same family as the depth and audience cards rather than to the PDF.
+
+   Each card reserves a graphic well at the top for artwork that does not
+   exist yet. The well holds its aspect ratio empty, so dropping a file into
+   a stage's `graphic` field later cannot reflow the chain.
+
+   Colour escalates along the chain — teal, light blue, orange, rust — and
+   every fill/text pairing is one the depth or team cards already use.
+   =========================================================================== */
+
+.pathway {
+  --pulse-cycle: 12s;
+  --pulse-max: 1.04;
+  /* Two-up column gap, and the arrow that has to sit centred inside it.
+     Both are read by the compact rules below, so the arrow's offset cannot
+     drift away from the gap it is centring in. */
+  --pw-col-gap: clamp(26px, 4.4vw, 44px);
+  --pw-arrow-w: clamp(13px, 1.1vw, 16px);
+}
+
+.pathway__inner {
+  /* Tighter at the top than the bottom: the thesis hero above is deliberately
+     shallow so this section reaches the landing screen, and a full pad here
+     would give that height straight back. */
+  padding-block: clamp(34px, 4vw, 58px) clamp(56px, 7.2vw, 104px);
+}
+
+.pathway__eyebrow {
+  margin: 0;
+  font-size: clamp(12px, 1.0294vw, 14px);
+  font-weight: 800;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  color: var(--teal);
+  will-change: transform, opacity;
+}
+
+.pathway__title {
+  max-width: 22ch;
+  margin: clamp(12px, 1.4vw, 20px) 0 0;
+  font-size: var(--fs-48);
+  line-height: 1.15;
+  font-weight: 800;
+  color: var(--light-blue);
+  text-wrap: balance;
+  will-change: transform, opacity;
+}
+
+.pathway__lede {
+  max-width: 62ch;
+  margin: clamp(12px, 1.4vw, 20px) 0 0;
+  font-size: var(--fs-20);
+  line-height: var(--lh-auto);
+  font-weight: 500;
+  color: var(--cream);
+  text-wrap: pretty;
+  will-change: transform, opacity;
+}
+
+/* Flex rather than a 4-column grid: the arrow is a real element (it animates
+   independently of the card it points at), and in a flex row it settles into
+   the gutter instead of eating one of four equal tracks. `stretch` is what
+   makes all four cards share the tallest card's height. */
+.pathway__chain {
+  display: flex;
+  /* Bottom-aligned, because the cards no longer share a height: each stage
+     rests larger than the one before it (--k), so the row climbs from left
+     to right like a staircase. Aligning them on a common baseline is what
+     turns four different sizes into a visible escalation. */
+  align-items: flex-end;
+  gap: clamp(10px, 1.3vw, 22px);
+  list-style: none;
+  margin: clamp(36px, 4.6vw, 66px) 0 0;
+  padding: 0;
+}
+
+/* --k escalates 1 / 1.08 / 1.16 / 1.24 across the four stages and is set on
+   the step in PathwaySection. Custom properties inherit, so the card inside
+   reads the same value for its padding and type. Here it also drives the
+   flex track, which is what makes the later stages physically wider. */
+.pathway__step {
+  flex: var(--k, 1) 1 0;
+  display: flex;
+  align-items: flex-end;
+  gap: clamp(10px, 1.3vw, 22px);
+  min-width: 0;
+}
+
+.pathway__arrow {
+  flex: 0 0 auto;
+  align-self: center;
+  display: flex;
+  color: var(--teal);
+  will-change: transform, opacity;
+}
+
+/* DownArrow is the Figma export used in "How it works"; rotating it keeps the
+   two arrow treatments on the page identical in weight and cap. */
+.pathway__arrow-icon {
+  width: var(--pw-arrow-w);
+  height: auto;
+  transform: rotate(-90deg);
+}
+
+/* Carries the scroll entrance (Motion writes an inline transform here). The
+   pulse lives on the card inside it, because a CSS animation outranks an
+   inline style and the two would otherwise fight over `transform`. */
+.pathway__mount {
+  flex: 1 1 auto;
+  min-width: 0;
+  display: flex;
+  will-change: transform, opacity;
+}
+
+.pathway__card {
+  flex: 1 1 auto;
+  min-width: 0;
+  display: flex;
+  flex-direction: column;
+  padding: calc(clamp(14px, 1.5vw, 22px) * var(--k, 1));
+  /* The pulse scales about the bottom edge, so a lifted card rises off the
+     shared baseline rather than sinking through it. */
+  transform-origin: 50% 100%;
+  border-radius: var(--r-35);
+  background: var(--stage-bg);
+  box-shadow: var(--shadow-lg);
+  box-sizing: border-box;
+  will-change: transform;
+}
+
+/* --- the travelling pulse ------------------------------------------------
+   One highlight moving down the chain, forever. Each card runs the same
+   12s track offset by 3s (--pulse-delay, set per stage in PathwaySection),
+   so the four phases are always 3s apart and the cycle repeats seamlessly.
+
+   Read the keyframes as one card's turn:
+       0%      resting
+       12.5%   swollen        (1.5s swell)
+       25%     still swollen  (1.5s hold — 3s lifted in total)
+       37.5%   resting again  (1.5s settle)
+       -> 100% resting, waiting for its next turn
+
+   The settle from 25% to 37.5% is the same 1.5s window in which the NEXT
+   card runs its 0% to 12.5% swell, which is the trade-off: one card is
+   always growing while exactly one other shrinks. Nothing coordinates that
+   — it falls out of offsetting one shared track.
+
+   1.04 is deliberately small. This is a highlight, not a resize; the cards'
+   real size ramp across the chain is --k, which is layout and static.
+
+   transform only, so it stays on the compositor and costs nothing to run
+   indefinitely.
+   -------------------------------------------------------------------------- */
+
+.pathway__card[data-pulse="true"] {
+  animation: pathway-pulse var(--pulse-cycle, 12s) ease-in-out
+    var(--pulse-delay, 0s) infinite both;
+}
+
+@keyframes pathway-pulse {
+  0% {
+    transform: scale(1);
+  }
+  12.5% {
+    transform: scale(var(--pulse-max, 1.04));
+  }
+  25% {
+    transform: scale(var(--pulse-max, 1.04));
+  }
+  37.5% {
+    transform: scale(1);
+  }
+  100% {
+    transform: scale(1);
+  }
+}
+
+/* --- the icon well -------------------------------------------------------
+   Sovhi Green on every card regardless of the card's own fill. The four
+   icons in design/icons were drawn for that background and it is the only
+   one all of them read on: on orange the head and the inflammation core
+   disappear, on rust the heart does. A constant dark window across four
+   escalating cards also reads as a specimen series, which suits the section.
+
+   Three colours inside the artwork were remapped during conversion for the
+   same reason — see the note in each icon component.
+   -------------------------------------------------------------------------- */
+
+.pathway__well {
+  display: grid;
+  place-items: center;
+  width: 100%;
+  aspect-ratio: 3 / 2;
+  padding: clamp(8px, 1vw, 14px);
+  border-radius: var(--r-25);
+  overflow: hidden;
+  background: var(--sovhi-green);
+  box-sizing: border-box;
+  margin-bottom: clamp(10px, 1.1vw, 16px);
+}
+
+/* The four artboards are 75x66, 58x64, 74x74 and 89x49, so one box would
+   make the square icons look heavy and the wide one look small. Each axis is
+   capped and the SVG's own preserveAspectRatio fits the art inside, centred;
+   --icon-scale (set per stage in PathwaySection) trims the rest by eye. */
+.pathway__icon {
+  width: 100%;
+  height: 100%;
+  max-width: calc(66% * var(--icon-scale, 1));
+  max-height: calc(70% * var(--icon-scale, 1));
+}
+
+.pathway__stage-n {
+  display: block;
+  font-size: clamp(11px, 0.9559vw, 13px);
+  font-weight: 800;
+  letter-spacing: 0.1em;
+  color: var(--stage-muted);
+  font-variant-numeric: tabular-nums;
+  opacity: 0.75;
+}
+
+.pathway__stage-title {
+  margin: clamp(6px, 0.7vw, 10px) 0 0;
+  font-size: calc(var(--fs-24) * var(--k, 1));
+  line-height: 1.18;
+  font-weight: 800;
+  color: var(--stage-fg);
+  text-wrap: balance;
+}
+
+.pathway__stage-body {
+  /* Pushed to the bottom of the card so the four bodies sit on one baseline
+     even when a title above them wraps to two lines. */
+  margin: auto 0 0;
+  padding-top: clamp(6px, 0.7vw, 10px);
+  font-size: calc(var(--fs-16) * var(--k, 1));
+  line-height: var(--lh-auto);
+  font-weight: 500;
+  color: var(--stage-muted);
+  text-wrap: pretty;
+}
+
+.pathway__foot {
+  max-width: 46ch;
+  margin: clamp(36px, 4.6vw, 66px) 0 0;
+  font-size: var(--fs-24);
+  line-height: var(--lh-auto);
+  font-weight: 800;
+  font-style: italic;
+  color: var(--light-blue);
+  text-wrap: pretty;
+  will-change: transform, opacity;
+}
+
+/* ===========================================================================
+   PATHWAY — COMPACT
+   Four across stops reading well before the type floors bottom out, so the
+   chain becomes a 2x2 grid and stays one — including on phones. Stacking to
+   a single column was the obvious alternative and is worse: it turns the
+   section into a long scroll and the reader never sees the chain as a
+   shape, which is the only reason the section exists.
+   =========================================================================== */
+
+@media (prefers-reduced-motion: reduce) {
+  .pathway__card {
+    animation: none;
+  }
+}
+
+@media (max-width: 1000px) {
+  .pathway__chain {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    /* Stretch, not end. Bottom-aligning is what makes the four-across row
+       read as a staircase, but --k is flat here so there is no staircase to
+       express — all it does is leave the tops of each pair ragged wherever
+       one title wraps and its neighbour does not. Equal heights per row. */
+    align-items: stretch;
+    column-gap: var(--pw-col-gap);
+    row-gap: clamp(24px, 3.6vw, 40px);
+  }
+
+  /* Two-up halves the ramp: a 1.24 card beside a 1.0 card is a staircase in
+     a row of four, but a size mismatch in a row of two. */
+  .pathway__step {
+    position: relative;
+    flex: 1 1 auto;
+    /* Pass the row's height down: step -> mount -> card. */
+    align-items: stretch;
+    --k: 1;
+  }
+
+  /* The arrow leaves the flex row and hangs in the column gap instead. In
+     the row it was taking width from its own card, which made the second
+     card of each pair visibly narrower than the first; out of flow, all
+     four cards get an identical track.
+
+     Centred with margins and a full-height flex box rather than a
+     translate, because Motion writes this element's entrance as an inline
+     transform and a centring transform here would be overwritten by it. */
+  .pathway__arrow {
+    position: absolute;
+    right: 100%;
+    top: 0;
+    bottom: 0;
+    margin-right: calc(var(--pw-col-gap) / 2 - var(--pw-arrow-w) / 2);
+    align-self: auto;
+    align-items: center;
+  }
+
+  /* Stage 03 opens the second row, so the arrow before it would be pointing
+     sideways at stage 02's card rather than down at its own. The wrap is
+     carried by reading order and by the 01-04 numerals. */
+  .pathway__step:nth-child(3) .pathway__arrow {
+    display: none;
+  }
+}
+
+@media (max-width: 620px) {
+  .pathway__chain {
+    column-gap: clamp(10px, 2.6vw, 16px);
+    row-gap: clamp(10px, 2.6vw, 16px);
+  }
+
+  /* No room left in the gap for an arrow that is still legible, and the
+     cards need every pixel of the track more than the chain needs its
+     connectors. The numerals keep the order. */
+  .pathway__arrow {
+    display: none;
+  }
+
+  .pathway__card {
+    padding: clamp(10px, 2.8vw, 15px);
+  }
+
+  /* Squarer than the 3:2 the wide layout uses: in a half-width column a
+     3:2 well is a thin letterbox and the icons lose their presence. */
+  .pathway__well {
+    aspect-ratio: 5 / 4;
+  }
+
+  /* "Dysregulation" and "Inflammation" are longer than a ~140px column at
+     the type floor, so let them break rather than overflow the card. */
+  .pathway__stage-title {
+    overflow-wrap: break-word;
+  }
+}
+
+/* ===========================================================================
+   PROBLEM / THESIS — the two columns
+   Stated side by side because they are one contrast: what healthcare does
+   now, and what Sovhi proposes instead. The hairline between them is the
+   same rule the stat band uses.
+   =========================================================================== */
+
+.problem__inner {
+  padding-block: clamp(56px, 7.2vw, 104px);
+}
+
+.problem__cols {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: clamp(32px, 5.3vw, 76px);
+}
+
+.problem__col {
+  min-width: 0;
+  will-change: transform, opacity;
+}
+
+.problem__col--thesis {
+  border-left: 1px solid color-mix(in srgb, var(--sovhi-green) 22%, transparent);
+  padding-left: clamp(32px, 5.3vw, 76px);
+  /* The gap already separates the columns; the rule sits in the middle of it
+     rather than adding to it. */
+  margin-left: calc(-1 * clamp(32px, 5.3vw, 76px) / 2);
+}
+
+.problem__eyebrow {
+  margin: 0;
+  font-size: clamp(12px, 1.0294vw, 14px);
+  font-weight: 800;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  color: var(--orange);
+}
+
+.problem__body {
+  margin: clamp(14px, 1.5vw, 22px) 0 0;
+  font-size: var(--fs-20);
+  line-height: var(--lh-auto);
+  font-weight: 500;
+  color: var(--turquoise);
+  text-wrap: pretty;
+}
+
+.problem__em {
+  font-style: italic;
+  color: var(--sovhi-green);
+}
+
+.problem__list {
+  list-style: none;
+  margin: clamp(20px, 2.2vw, 32px) 0 0;
+  padding: 0;
+  display: grid;
+  gap: clamp(10px, 1.1vw, 16px);
+}
+
+/* The one-pager marks these with a rust en dash rather than a bullet. Kept,
+   because a dash reads as "a further point" where a disc reads as a list of
+   equals — and these are three escalating figures. */
+.problem__item {
+  position: relative;
+  padding-left: clamp(22px, 2.1vw, 30px);
+  font-size: var(--fs-18);
+  line-height: var(--lh-auto);
+  font-weight: 500;
+  color: var(--turquoise);
+  text-wrap: pretty;
+  will-change: transform, opacity;
+}
+
+.problem__item::before {
+  content: "\2013";
+  position: absolute;
+  left: 0;
+  top: 0;
+  color: var(--orange);
+  font-weight: 800;
+}
+
+.problem__lead {
+  font-weight: 800;
+  color: var(--sovhi-green);
+  font-variant-numeric: tabular-nums;
+}
+
+@media (max-width: 860px) {
+  .problem__cols {
+    grid-template-columns: 1fr;
+    gap: clamp(32px, 5vw, 48px);
+  }
+
+  /* Side by side becomes stacked, so the rule moves from the left edge to the
+     top where it still separates the two. */
+  .problem__col--thesis {
+    border-left: 0;
+    border-top: 1px solid color-mix(in srgb, var(--sovhi-green) 22%, transparent);
+    padding-left: 0;
+    padding-top: clamp(28px, 4.4vw, 44px);
+    margin-left: 0;
+  }
+}
+
+/* ===========================================================================
+   STAT BAND — the four headline figures between two rules
+   The only ruled element on the site, which is the point: it is the one place
+   the page stops arguing and just states the numbers.
+   =========================================================================== */
+
+.band__inner {
+  padding-block: clamp(8px, 1vw, 16px);
+}
+
+.band__rule {
+  display: block;
+  width: 100%;
+  height: 1px;
+  background: color-mix(in srgb, var(--sovhi-green) 30%, transparent);
+  /* Drawn outward from the centre by scaleX. transform-origin must be the
+     centre for that; the default 50% is already correct but is stated here
+     because the animation depends on it. */
+  transform-origin: 50% 50%;
+  will-change: transform;
+}
+
+/* --- the marquee ----------------------------------------------------------
+   The figures never stop moving. The track holds the four twice and slides
+   by exactly half its width, so when it wraps, copy two is already sitting
+   where copy one started and there is no seam.
+
+   For that to be exact the track must be precisely 2x one group, which means
+   the spacing cannot come from `gap` — a gap between the two groups is not
+   included in either group's width and would make 50% land short. Every stat
+   carries its own trailing margin instead, so group width is a clean sum.
+
+   Duration is a legibility budget, not a style: --band-marquee-dur is 56s
+   for one full pass, which keeps a given figure on screen about 14s. See
+   BAND.marquee in motion-timeline.ts.
+   -------------------------------------------------------------------------- */
+
+.band {
+  --band-marquee-dur: 56s;
+  --band-item-gap: clamp(28px, 4vw, 72px);
+}
+
+.band__viewport {
+  overflow: hidden;
+  /* Softens both ends so figures enter and leave rather than being clipped
+     mid-glyph against the section gutter. */
+  mask-image: linear-gradient(
+    90deg,
+    transparent 0,
+    #000 6%,
+    #000 94%,
+    transparent 100%
+  );
+}
+
+.band__track {
+  display: flex;
+  width: max-content;
+  margin: 0;
+  padding-block: clamp(28px, 3.8vw, 54px);
+}
+
+.band__group {
+  display: flex;
+  flex: 0 0 auto;
+}
+
+.band__track[data-animated="true"] {
+  animation: band-marquee var(--band-marquee-dur) linear infinite;
+}
+
+/* Reading a moving number is harder than reading a still one, so pointing at
+   the band or tabbing into it stops it. */
+.band:hover .band__track[data-animated="true"],
+.band:focus-within .band__track[data-animated="true"] {
+  animation-play-state: paused;
+}
+
+@keyframes band-marquee {
+  from {
+    transform: translate3d(0, 0, 0);
+  }
+  to {
+    transform: translate3d(-50%, 0, 0);
+  }
+}
+
+.band__stat {
+  flex: 0 0 auto;
+  width: clamp(200px, 21vw, 290px);
+  /* Trailing margin rather than gap — see the note above. */
+  margin-right: var(--band-item-gap);
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  text-align: center;
+  gap: clamp(4px, 0.55vw, 8px);
+}
+
+.band__value {
+  font-size: var(--fs-48);
+  line-height: 1.1;
+  font-weight: 800;
+  color: var(--orange);
+  white-space: nowrap;
+  /* tnum keeps the four values optically even. See the font note at the top
+     of this file: the DEMO build watermarks "4", so the 4 in $4.1T is served
+     by Graphik and sits slightly wider than its neighbours. That resolves
+     itself when the licensed TT Commons kit lands. */
+  font-variant-numeric: tabular-nums;
+}
+
+.band__label {
+  max-width: 24ch;
+  margin: 0;
+  font-size: clamp(11px, 0.9559vw, 13px);
+  line-height: 1.35;
+  font-weight: 500;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+  color: var(--turquoise);
+}
+
+/* The attribution, where there is one. Quieter than the label so it reads as
+   a citation rather than as part of the claim. */
+.band__source {
+  color: var(--sovhi-green);
+  font-weight: 800;
+  opacity: 0.6;
+}
+
+/* --- still fallback -------------------------------------------------------
+   Motion off: the track becomes a plain four-up grid and the duplicate group
+   is dropped, so the page states each figure once. This is driven by the
+   data attribute (set from useReducedMotion) AND by the media query, so it
+   holds whether the check happens in JS or in CSS.
+   -------------------------------------------------------------------------- */
+
+.band__track[data-animated="false"] {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  width: 100%;
+  animation: none;
+}
+
+.band__track[data-animated="false"] .band__group:last-child {
+  display: none;
+}
+
+.band__track[data-animated="false"] .band__group {
+  display: contents;
+}
+
+.band__track[data-animated="false"] .band__stat {
+  width: auto;
+  margin-right: 0;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .band__track {
+    animation: none;
+  }
+}
+
+@media (max-width: 860px) {
+  .band__track[data-animated="false"] {
+    grid-template-columns: repeat(2, 1fr);
+    row-gap: clamp(24px, 4vw, 40px);
+  }
+}
+
+@media (max-width: 420px) {
+  .band__track[data-animated="false"] {
+    grid-template-columns: 1fr;
+  }
+}
+
+/* ===========================================================================
+   PLATFORM — three layers, then the two panels
+   The three layer cards reuse the depth cards' fill/text pairings exactly
+   (green+light blue, teal+green, light blue+turquoise) so the row is
+   recognisably part of this site.
+
+   Market Opportunity has to out-rank them. It takes the one orange fill on
+   the page, the wider of the two columns, display-size numerals, and — the
+   part that actually does the work — DARK text where all three cards above
+   it use light text. That makes it read as a different class of object
+   rather than as a fourth, bigger card. SAFE terms is then deliberately
+   quiet: outlined, unfilled, no shadow.
+   =========================================================================== */
+
+.platform__inner {
+  padding-block: clamp(56px, 7.2vw, 104px);
+}
+
+.platform__eyebrow {
+  margin: 0;
+  font-size: clamp(12px, 1.0294vw, 14px);
+  font-weight: 800;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  color: var(--orange);
+  will-change: transform, opacity;
+}
+
+.platform__title {
+  max-width: 24ch;
+  margin: clamp(12px, 1.4vw, 20px) 0 0;
+  font-size: var(--fs-48);
+  line-height: 1.15;
+  font-weight: 800;
+  color: var(--sovhi-green);
+  text-wrap: balance;
+  will-change: transform, opacity;
+}
+
+/* --- the three layer cards ------------------------------------------------ */
+
+.platform__layers {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: clamp(16px, 1.9vw, 28px);
+  list-style: none;
+  margin: clamp(36px, 4.6vw, 66px) 0 0;
+  padding: 0;
+}
+
+.platform__card {
+  display: flex;
+  flex-direction: column;
+  padding: clamp(20px, 2.2vw, 34px);
+  border-radius: var(--r-35);
+  background: var(--card-bg);
+  color: var(--card-fg);
+  box-shadow: var(--shadow-lg);
+  box-sizing: border-box;
+  will-change: transform, opacity;
+}
+
+.platform__card-head {
+  display: flex;
+  align-items: baseline;
+  justify-content: space-between;
+  gap: 12px;
+}
+
+.platform__card-kicker {
+  font-size: clamp(11px, 0.9559vw, 13px);
+  font-weight: 800;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  opacity: 0.8;
+}
+
+.platform__card-n {
+  font-size: var(--fs-24);
+  font-weight: 800;
+  font-style: italic;
+  font-variant-numeric: tabular-nums;
+  opacity: 0.55;
+}
+
+.platform__card-name {
+  margin: clamp(10px, 1.1vw, 16px) 0 0;
+  font-size: var(--fs-32);
+  line-height: 1.15;
+  font-weight: 800;
+  text-wrap: balance;
+}
+
+.platform__card-body {
+  margin: clamp(10px, 1.1vw, 16px) 0 0;
+  font-size: var(--fs-18);
+  line-height: var(--lh-auto);
+  font-weight: 500;
+  text-wrap: pretty;
+}
+
+/* --- the two panels ------------------------------------------------------- */
+
+.platform__panels {
+  display: grid;
+  /* Market Opportunity is wider on purpose; the ratio is what signals which
+     of the two is the argument before either is read. */
+  grid-template-columns: 1.35fr 1fr;
+  gap: clamp(16px, 1.9vw, 28px);
+  margin-top: clamp(16px, 1.9vw, 28px);
+}
+
+.platform__panel {
+  padding: clamp(24px, 2.6vw, 40px);
+  border-radius: var(--r-35);
+  box-sizing: border-box;
+  will-change: transform, opacity;
+}
+
+.platform__panel-eyebrow {
+  margin: 0;
+  font-size: clamp(11px, 0.9559vw, 13px);
+  font-weight: 800;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+}
+
+/* Off-black on orange is 5.2:1, where the site's usual cream-on-orange is
+   2.7:1. At display size on the single most important panel of the section,
+   the legible pairing won over the familiar one. */
+.platform__panel--market {
+  background: var(--orange);
+  color: var(--off-black);
+  box-shadow: var(--shadow-lg);
+}
+
+.platform__panel--market .platform__panel-eyebrow {
+  color: var(--off-black);
+  opacity: 0.72;
+}
+
+.platform__market {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: clamp(16px, 1.9vw, 28px);
+  margin: clamp(18px, 2vw, 30px) 0 0;
+}
+
+.platform__market-item {
+  min-width: 0;
+}
+
+.platform__market-value {
+  font-size: var(--fs-40);
+  line-height: 1.05;
+  font-weight: 800;
+  font-variant-numeric: tabular-nums;
+}
+
+.platform__market-label {
+  max-width: 18ch;
+  margin: clamp(4px, 0.5vw, 8px) 0 0;
+  font-size: clamp(11px, 0.9559vw, 13px);
+  line-height: 1.35;
+  font-weight: 500;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+  opacity: 0.78;
+}
+
+.platform__panel-foot {
+  max-width: 62ch;
+  margin: clamp(20px, 2.2vw, 34px) 0 0;
+  font-size: var(--fs-18);
+  line-height: var(--lh-auto);
+  font-weight: 500;
+  font-style: italic;
+  text-wrap: pretty;
+}
+
+/* Outlined rather than filled, and no shadow, so it sits behind the market
+   panel in the reading order without being hard to read. */
+.platform__panel--terms {
+  background: transparent;
+  color: var(--sovhi-green);
+  border: 1px solid color-mix(in srgb, var(--sovhi-green) 30%, transparent);
+}
+
+.platform__panel--terms .platform__panel-eyebrow {
+  color: var(--orange);
+}
+
+.platform__terms {
+  margin: clamp(14px, 1.5vw, 22px) 0 0;
+}
+
+/* Label left, value right, on a dotted leader — the one place the ruled
+   language of the stat band reappears, because these really are a table. */
+.platform__term {
+  display: flex;
+  align-items: baseline;
+  justify-content: space-between;
+  gap: 16px;
+  padding-block: clamp(9px, 1vw, 14px);
+  border-bottom: 1px dotted
+    color-mix(in srgb, var(--sovhi-green) 28%, transparent);
+}
+
+.platform__term:last-child {
+  border-bottom: 0;
+  padding-bottom: 0;
+}
+
+.platform__term-k {
+  font-size: clamp(11px, 0.9559vw, 13px);
+  font-weight: 500;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: var(--turquoise);
+}
+
+.platform__term-v {
+  margin: 0;
+  font-size: var(--fs-18);
+  font-weight: 800;
+  color: var(--sovhi-green);
+  text-align: right;
+  font-variant-numeric: tabular-nums;
+}
+
+/* ===========================================================================
+   PLATFORM — COMPACT
+   =========================================================================== */
+
+@media (max-width: 1000px) {
+  .platform__layers {
+    grid-template-columns: 1fr;
+  }
+
+  .platform__panels {
+    grid-template-columns: 1fr;
+  }
+}
+
+@media (max-width: 560px) {
+  .platform__market {
+    grid-template-columns: 1fr;
+    gap: clamp(14px, 3vw, 20px);
+  }
+
+  .platform__market-label {
+    max-width: 28ch;
+  }
+}
+
+/* ===========================================================================
+   HERO
+   Figma stacks these at y = 124 / 220 / 771 / 890 in a 990px frame. Expressed
+   here as flow with the gaps between them, which reproduces those positions
+   at 1440 and reflows cleanly below:
+     124 + 59 + 37 + 529 + 22 + 104 + 15 + 65 + 35 = 990
+   =========================================================================== */
+
+.hero {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  /* Floor is 84px, not the proportional value: the nav is fixed and bottoms
+     out at 54px on narrow screens, so a smaller floor would tuck the title
+     underneath it. 9.1176vw still pins 124px at 1440. */
+  padding-top: clamp(84px, 9.1176vw, 124px);
+  padding-bottom: clamp(20px, 2.5735vw, 35px);
+}
+
+.hero__title {
+  /* Fixed height, not min-height: the 48px/1.25 line box is 60px against
+     Figma's 59px box, so letting content drive the height would push the
+     image down by 1px. The glyphs are centred either way. */
+  height: clamp(34px, 4.3382vw, 59px);
+  width: 100%;
+  padding-inline: var(--page-gutter);
+  box-sizing: border-box;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  text-align: center;
+  font-size: var(--fs-title);
+  line-height: var(--lh-auto);
+  font-weight: 800;
+  color: var(--orange);
+  margin: 0;
+}
+
+.hero__figure {
+  /* Positioned so next/image's `fill` resolves against this box rather than
+     .page. `fill` is the right API here because the photo is cropped. */
+  position: relative;
+  width: min(1020px, 71%);
+  aspect-ratio: 1020 / 529;
+  margin: clamp(20px, 2.7206vw, 37px) 0 0;
+  border-radius: var(--r-70);
+  overflow: hidden;
+  background: var(--cream);
+  box-shadow: var(--shadow-lg);
+  will-change: transform, opacity;
+}
+
+/* Figma crops a 1020x813 render to a 529px window by offsetting it -201px.
+   As a ratio that is 201 / (813 - 529) = 70.77% down the overflow, which
+   object-position reproduces at any container size. */
+.hero__image {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  object-position: center 70.77%;
+  display: block;
+}
+
+.hero__lede {
+  /* min-height, not height: 854px holds two lines at 1440 (60px inside a
+     104px box) but must be free to grow to three or four when narrower. */
+  min-height: clamp(60px, 7.5vw, 104px);
+  width: min(854px, 60%);
+  margin: clamp(14px, 1.6176vw, 22px) 0 0;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  text-align: center;
+  font-size: var(--fs-lede);
+  line-height: var(--lh-auto);
+  font-weight: 500;
+  color: var(--sovhi-green);
+}
+
+/* The lede is one run of text with a differently coloured phrase inside it.
+   Its coloured spans must stay inline, so they are wrapped in a single flex
+   item; as direct children of the column flex container each span would
+   become its own line. */
+.hero__lede-copy {
+  display: block;
+  width: 100%;
+}
+
+/* The highlight sweeps green -> orange from left to right without splitting
+   the run into per-character spans, which would disturb kerning and break the
+   pixel match. One 200%-wide two-stop gradient is clipped to the glyphs and
+   slid from right to left, moving the colour boundary left to right.
+
+   The travel overshoots on both ends, and this matters. With background-size
+   200%, position 100% shows the gradient's 50-100% band and position 0% shows
+   0-50% — so both end states land exactly on the 50% mark. Any feather across
+   that mark means the phrase ends mid-blend: the tail of "history" renders as
+   part-green, and the head of "intelligence" as part-orange. Running 110% to
+   -10% pushes the feather clear of the element at both ends, so each resting
+   state is one solid colour. The 4% feather needs p >= 104% for pure green and
+   p <= -4% for pure orange; 110/-10 keeps a margin. */
+.hero__highlight,
+.closing__highlight {
+  color: var(--orange);
+}
+
+@supports ((background-clip: text) or (-webkit-background-clip: text)) {
+  .hero__highlight,
+  .closing__highlight {
+    background-image: linear-gradient(
+      90deg,
+      var(--orange) 0%,
+      var(--orange) 49%,
+      var(--sovhi-green) 51%,
+      var(--sovhi-green) 100%
+    );
+    /* 300%, travelling 75% -> 25%. The earlier 200% version ran to -10%,
+       which shifts the gradient RIGHT and leaves the first 10% of the element
+       with no background at all — and with background-clip:text that means no
+       text. At 300% both rest states are a pure colour AND every position in
+       0-100% still covers the element, so nothing can vanish. */
+    background-size: 300% 100%;
+    background-position: 75% 0;
+    background-repeat: repeat-x;
+    -webkit-background-clip: text;
+    background-clip: text;
+    color: transparent;
+    -webkit-text-fill-color: transparent;
+    /* Close to linear so the edge crosses the words at a steady pace. A
+       conventional ease spends most of its speed in the middle, which reads as
+       a flick rather than a wipe however long the duration is. */
+    transition: background-position var(--t-sweep-dur)
+      cubic-bezier(0.45, 0.15, 0.55, 0.85);
+  }
+
+  .hero__highlight[data-lit="true"],
+  .closing__highlight[data-lit="true"] {
+    background-position: 25% 0;
+  }
+}
+
+.hero__cta {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: clamp(200px, 20%, 270px);
+  height: clamp(48px, 4.8vw, 65px);
+  margin: clamp(10px, 1.1029vw, 15px) 0 0;
+  background: var(--sovhi-green);
+  border-radius: 35px;
+  font-size: var(--fs-cta);
+  line-height: var(--lh-auto);
+  font-weight: 800;
+  color: var(--cream);
+  text-decoration: none;
+  border: 0;
+  cursor: pointer;
+  font-family: inherit;
+  white-space: nowrap;
+  transition: background-color 320ms ease;
+  will-change: transform, opacity;
+}
+
+.hero__cta:hover,
+.hero__cta:focus-visible {
+  background-color: var(--orange);
+}
+
+/* ===========================================================================
+   COMPACT WIDTHS
+   Below 700px the proportional ramp has bottomed out on its type floors, so
+   boxes stop being useful and the layout switches to content-driven heights.
+   =========================================================================== */
+
+@media (max-width: 700px) {
+  .hero__title {
+    height: auto;
+    min-height: 34px;
+  }
+
+  /* 1020:529 is too letterboxed to read at phone widths; open the frame up
+     so the subject survives the crop. */
+  .hero__figure {
+    width: calc(100% - 2 * var(--page-gutter));
+    aspect-ratio: 3 / 2;
+  }
+
+  .hero__lede {
+    width: calc(100% - 2 * var(--page-gutter));
+  }
+}
+
+@media (max-width: 560px) {
+  .hero__figure {
+    aspect-ratio: 4 / 3;
+  }
+
+  /* The three section links no longer fit beside the lockup. All three go
+     (note "Our team" sits in the actions group, not the links group), and the
+     lockup stops being centre-anchored, leaving wordmark + action.
+     TODO: replace with a real menu when the mobile design lands. */
+  .site-nav__links,
+  .site-nav__item--team {
+    display: none;
+  }
+
+  .site-nav__lockup {
+    position: static;
+    transform: none;
+    margin-right: auto;
+  }
+}
+
+/* ===========================================================================
+   REDUCED MOTION
+   Skip the intro and land on the designed end state.
+   =========================================================================== */
+
+@media (prefers-reduced-motion: reduce) {
+  .hero__highlight,
+  .closing__highlight {
+    transition: none;
+    background-position: 25% 0;
+  }
+  .hero__cta,
+  .site-nav__cta {
+    transition: none;
+  }
+}
+
+/* ===========================================================================
+   STATS SECTION — "The things that wear us down start upstream"
+   Figma: 1440x804 at page y=990. Four 260x260 stat cards scattered at fixed
+   positions, two of them rotated, plus a 589x260 photo card.
+
+   Scatter cannot be expressed in flow, so children are absolutely positioned
+   as PERCENTAGES of a box whose aspect-ratio is locked to 1440/804. That makes
+   the whole arrangement scale proportionally at any width and land exact at
+   1440 — and because height tracks width, a 260x260 card stays square.
+
+   Figma also flattens each rotated group: the card and both text boxes each
+   carry their own rotate() about their own top-left. Here each card is ONE
+   rotated unit with the text at its recovered local offset, which is
+   mathematically identical and lets the card animate as a whole.
+   =========================================================================== */
+
+.stats {
+  position: relative;
+  width: 100%;
+  aspect-ratio: 1440 / 804;
+  background: var(--cream);
+  /* The cards wait off-stage past the bottom-right corner until the deal is
+     triggered, which puts them ~390px outside the page. Clip here rather than
+     leaning on html { overflow-x: hidden } to hide them. `clip` instead of
+     `hidden` so no scroll container is created. */
+  overflow: clip;
+  /* Fonts track the layout rather than clamping, so text keeps its proportion
+     inside the fixed-percentage boxes. Capped at the Figma size above 1440. */
+  --stats-fs-title: min(40px, 2.8vw);
+  --stats-fs-stat: min(36px, 2.52vw);
+  --stats-fs-body: min(16px, 1.12vw);
+}
+
+.stats__title {
+  position: absolute;
+  left: 7.5%;            /* 108 / 1440 */
+  top: 26.8657%;         /* 216 / 804 */
+  width: 32.2917%;       /* 465 / 1440 */
+  font-size: var(--stats-fs-title);
+  line-height: var(--lh-auto);
+  font-weight: 800;
+  color: var(--orange);
+  margin: 0;
+}
+
+/* --- stat cards ----------------------------------------------------------- */
+
+/* Transparent in the scatter layout so the cards keep resolving their absolute
+   positions against .stats; becomes a real grid in the compact layout. */
+.stats__grid {
+  display: contents;
+}
+
+.stats__card {
+  position: absolute;
+  width: 18.0556%;       /* 260 / 1440 */
+  height: 32.3383%;      /* 260 / 804  — equals the width, so the card is square */
+  border-radius: var(--r-35);
+  box-shadow: var(--shadow-lg);
+  /* Figma rotates each card about its top-left, and the recovered text offsets
+     assume that origin. Motion animates `rotate`, so this must not be set in
+     CSS or the two would fight. */
+  transform-origin: top left;
+  will-change: transform, opacity;
+}
+
+.stats__stat {
+  position: absolute;
+  width: 80%;            /* 208 / 260 */
+  height: 16.9231%;      /*  44 / 260 */
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  font-size: var(--stats-fs-stat);
+  line-height: var(--lh-auto);
+  font-weight: 800;
+}
+
+.stats__body {
+  position: absolute;
+  width: 80%;            /* 208 / 260 */
+  font-size: var(--stats-fs-body);
+  line-height: var(--lh-auto);
+  font-weight: 500;
+  margin: 0;
+}
+
+/* Per-card placement. Offsets are percentages of the 260px card. */
+.stats__card--mortality {
+  left: 7.5%;            /* 108 / 1440 */
+  top: 53.7313%;         /* 432 / 804  */
+  background: var(--sovhi-green);
+  color: var(--cream);
+}
+.stats__card--mortality .stats__stat { left: 9.6154%; top: 12.3077%; }
+.stats__card--mortality .stats__body { left: 9.6154%; top: 50%; }
+
+.stats__card--cost {
+  left: 27.9861%;        /* 403 / 1440    */
+  top: 54.5535%;         /* 438.61 / 804  */
+  background: var(--orange);
+  color: var(--rust);
+}
+.stats__card--cost .stats__stat { left: 10.8885%; top: 12.3538%; }
+.stats__card--cost .stats__body { left: 10.5577%; top: 48.6308%; }
+
+.stats__card--isolation {
+  left: 51.2625%;        /* 738.18 / 1440 */
+  top: 9.3284%;          /*  75 / 804     */
+  background: var(--light-blue);
+  color: var(--turquoise);
+}
+.stats__card--isolation .stats__stat { left: 11.6692%; top: 14.2423%; }
+.stats__card--isolation .stats__body { left: 11.5462%; top: 46.7423%; }
+
+.stats__card--stress {
+  left: 72.2222%;        /* 1040 / 1440 */
+  top: 11.5672%;         /*   93 / 804  */
+  background: var(--teal);
+  color: var(--sovhi-green);
+}
+.stats__card--stress .stats__stat { left: 10%; top: 14.6154%; }
+.stats__card--stress .stats__body { left: 10%; top: 48.0769%; }
+
+/* --- photo card ----------------------------------------------------------- */
+
+.stats__photo {
+  position: absolute;
+  left: 49.375%;         /* 711 / 1440 */
+  top: 52.8607%;         /* 425 / 804  */
+  width: 40.9028%;       /* 589 / 1440 */
+  height: 32.3383%;      /* 260 / 804  */
+  border-radius: var(--r-35);
+  overflow: hidden;
+  background: var(--off-black);
+  box-shadow: 0 15px 20px rgba(0, 0, 0, 0.25);
+  margin: 0;
+  will-change: opacity;
+}
+
+/* Figma renders the photo at 725x544 inside the 589x260 window at y=-55.
+   725/589 = 123.09% of the container width; the -55px offset is -55/260 of
+   the container height because the container's aspect is fixed. */
+.stats__photo img {
+  position: absolute;
+  left: 0;
+  top: -21.1538%;
+  width: 123.0900%;
+  /* Tailwind preflight sets img { max-width: 100% }, which would cap this at
+     the container's 589px and undo the crop. */
+  max-width: none;
+  aspect-ratio: 725 / 544;
+  height: auto;
+  object-fit: cover;
+  display: block;
+}
+
+/* ===========================================================================
+   STATS — COMPACT
+   The scatter is a desktop treatment: at 260/1440 a card is 18% of the width,
+   so below ~1180px its 16px body copy would have to shrink past legibility to
+   stay inside the box. Under that width the cards become an ordinary grid at
+   readable sizes, upright and unrotated, and the photo spans the full row.
+   =========================================================================== */
+
+@media (max-width: 1179px) {
+  .stats {
+    aspect-ratio: auto;
+    display: flex;
+    flex-direction: column;
+    gap: clamp(20px, 3vw, 36px);
+    padding: clamp(48px, 6vw, 90px) var(--page-gutter) clamp(48px, 6vw, 90px);
+    box-sizing: border-box;
+    --stats-fs-title: clamp(26px, 2.9412vw, 40px);
+    --stats-fs-stat: clamp(28px, 2.6471vw, 36px);
+    --stats-fs-body: clamp(15px, 1.3vw, 17px);
+  }
+
+  .stats__title,
+  .stats__card,
+  .stats__stat,
+  .stats__body {
+    position: static;
+    left: auto;
+    top: auto;
+    width: auto;
+    height: auto;
+  }
+
+  /* relative, not static: the cropped image inside is absolutely positioned
+     and must keep this box as its containing block, or it resolves against
+     .stats and blows out to 123% of the section width. */
+  .stats__photo {
+    position: relative;
+    left: auto;
+    top: auto;
+    height: auto;
+  }
+
+  .stats__title { max-width: 20ch; }
+
+  /* Fixed two columns rather than auto-fit: with four cards, auto-fit lands on
+     three across and one orphan at most widths. */
+  .stats__grid {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    gap: clamp(16px, 2vw, 28px);
+  }
+
+  /* No forced square here. At two columns a 1:1 card would be ~500px tall for
+     ~100px of copy; a min-height keeps the card proportions sane at any width. */
+  .stats__card {
+    aspect-ratio: auto;
+    min-height: 220px;
+    display: flex;
+    flex-direction: column;
+    gap: 0.6em;
+    padding: clamp(20px, 3.5vw, 32px);
+    box-sizing: border-box;
+    transform-origin: center;
+  }
+
+  .stats__stat { flex: none; }
+  .stats__body { margin-top: auto; }
+
+  .stats__photo {
+    aspect-ratio: 589 / 260;
+    width: 100%;
+  }
+}
+
+@media (max-width: 560px) {
+  .stats__grid {
+    grid-template-columns: 1fr;
+  }
+}
+
+/* ===========================================================================
+   HOW IT WORKS — "A clearer picture of what's shaping your health"
+   Figma: 1440x1167 orange, nodes 416-841 (collapsed) and 386-137 (expanded).
+
+   Three 256-wide cards grow 185 -> 367 downward on hover. Rather than position
+   their contents absolutely — which would break as the height animates — the
+   card is flow-laid-out and the growth lives entirely in one "reveal" block
+   below the title:
+
+     13 pad + 45 pill + 18 gap + 60 title = 136, then
+     reveal  49 (18 + 22 arrow + 9)  -> card 185
+     reveal 231 (63 + 138 body + 30) -> card 367
+
+   That puts the arrow at 154 and the body at 199 from the card top, matching
+   Figma, and makes card height a pure function of one animated value.
+
+   Lengths are multiples of --u, which is 1/1440 of the section width: exactly
+   1px at the design size and proportional below. cqw (not vw) so a scrollbar
+   cannot skew it; a container cannot query itself, hence the shell wrapper.
+   =========================================================================== */
+
+.how-shell {
+  container-type: inline-size;
+  width: 100%;
+}
+
+.how {
+  --u: calc(100cqw / 1440);
+  --bleed-color: var(--orange);
+  position: relative;
+  width: 100%;
+  aspect-ratio: 1440 / 1167;
+  background: var(--orange);
+  color: var(--cream);
+}
+
+.how__title {
+  position: absolute;
+  left: 0;
+  top: calc(26 * var(--u));
+  width: 100%;
+  height: calc(49 * var(--u));
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  text-align: center;
+  font-size: calc(40 * var(--u));
+  line-height: var(--lh-auto);
+  font-weight: 800;
+  color: var(--cream);
+  margin: 0;
+}
+
+.how__figure {
+  position: absolute;
+  left: calc(210 * var(--u));
+  top: calc(125 * var(--u));
+  width: calc(1020 * var(--u));
+  height: calc(680 * var(--u));
+  border-radius: calc(70 * var(--u));
+  overflow: hidden;
+  background: var(--cream);
+  box-shadow: var(--shadow-sm);
+  margin: 0;
+  will-change: opacity;
+}
+
+/* The photo fills the card exactly — Figma applies no crop here. */
+.how__figure img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  display: block;
+}
+
+/* --- the three step cards ------------------------------------------------- */
+
+.how__steps {
+  position: absolute;
+  left: calc(279 * var(--u));
+  top: calc(746 * var(--u));
+  width: calc(882 * var(--u)); /* 3x256 + 2x57 */
+  display: flex;
+  align-items: flex-start;
+  gap: calc(57 * var(--u));
+  list-style: none;
+  margin: 0;
+  padding: 0;
+}
+
+.how__step {
+  width: calc(256 * var(--u));
+  flex: none;
+}
+
+.how__card {
+  display: block;
+  width: 100%;
+  padding: calc(13 * var(--u)) calc(13 * var(--u)) 0;
+  background: var(--cream);
+  border: 0;
+  border-radius: calc(35 * var(--u));
+  font-family: inherit;
+  text-align: left;
+  cursor: pointer;
+  box-sizing: border-box;
+  will-change: transform, opacity;
+}
+
+.how__num {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  height: calc(45 * var(--u));
+  background: var(--sovhi-green);
+  border-radius: calc(35 * var(--u));
+  font-size: calc(24 * var(--u));
+  line-height: var(--lh-auto);
+  font-weight: 800;
+  color: var(--cream);
+}
+
+.how__step-title {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  height: calc(60 * var(--u));
+  margin-top: calc(18 * var(--u));
+  text-align: center;
+  font-size: calc(24 * var(--u));
+  line-height: var(--lh-auto);
+  font-weight: 800;
+  color: var(--sovhi-green);
+}
+
+/* One animated block. --reveal-t runs 0 -> 1; the two endpoints are declared
+   per layout so the compact breakpoint can use its own sizes. */
+.how__reveal {
+  --reveal-closed: calc(49 * var(--u));
+  --reveal-open: calc(231 * var(--u));
+  --reveal-t: 0;
+  display: block; /* it is a <span>; inline would ignore height and overflow */
+  position: relative;
+  height: calc(
+    var(--reveal-closed) + (var(--reveal-open) - var(--reveal-closed)) *
+      var(--reveal-t)
+  );
+  overflow: hidden;
+}
+
+/* Overlays the reveal exactly, so animating its opacity fades the arrow
+   without the wrapper contributing a line box to the reveal. */
+.how__arrow-slot {
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+}
+
+.how__arrow {
+  position: absolute;
+  top: calc(18 * var(--u));
+  left: 50%;
+  transform: translateX(-50%);
+  width: calc(20 * var(--u));
+  height: calc(22 * var(--u));
+  color: var(--sovhi-green);
+}
+
+/* Bob to advertise that the card responds to hover. Runs only while closed and
+   only after the section has finished its entrance. */
+.how__card[data-open="false"][data-ready="true"] .how__arrow {
+  animation: how-arrow-bob 1.6s ease-in-out infinite;
+}
+
+/* Straddles the resting position rather than hanging below it, so the arrow's
+   average sits exactly where Figma puts it (y=154 in the card). */
+@keyframes how-arrow-bob {
+  0%, 100% { transform: translate(-50%, calc(-2 * var(--u))); }
+  50% { transform: translate(-50%, calc(2 * var(--u))); }
+}
+
+.how__body {
+  position: absolute;
+  top: calc(63 * var(--u));
+  left: 0;
+  width: 100%;
+  height: calc(138 * var(--u));
+  display: flex;
+  flex-direction: column;
+  justify-content: flex-end; /* Figma bottom-aligns this copy */
+  font-size: calc(18 * var(--u));
+  line-height: var(--lh-auto);
+  font-weight: 500;
+  color: var(--sovhi-green);
+  margin: 0;
+}
+
+/* ===========================================================================
+   HOW IT WORKS — COMPACT
+   Below 1180px a 256/1440 card is under 18% of the viewport, so its 18px copy
+   would have to shrink past legibility to stay in the box. The cards become a
+   grid at readable sizes; the reveal keeps animating, on its own endpoints.
+   =========================================================================== */
+
+@media (max-width: 1179px) {
+  .how {
+    aspect-ratio: auto;
+    padding: clamp(40px, 5vw, 72px) var(--page-gutter);
+    box-sizing: border-box;
+  }
+
+  .how__title,
+  .how__figure,
+  .how__steps {
+    position: static;
+    left: auto;
+    top: auto;
+    width: auto;
+    height: auto;
+  }
+
+  .how__title {
+    font-size: clamp(26px, 2.9412vw, 40px);
+    margin-bottom: clamp(24px, 3vw, 40px);
+  }
+
+  .how__figure {
+    position: relative;
+    aspect-ratio: 1020 / 680;
+    border-radius: clamp(24px, 3vw, 70px);
+    margin-bottom: clamp(24px, 3vw, 40px);
+  }
+
+  .how__steps {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: clamp(14px, 2vw, 24px);
+    align-items: start;
+  }
+
+  .how__step { width: auto; }
+
+  .how__card {
+    padding: clamp(14px, 1.8vw, 20px) clamp(14px, 1.8vw, 20px) 0;
+    border-radius: clamp(20px, 2.4vw, 35px);
+  }
+
+  .how__num {
+    height: clamp(36px, 4vw, 45px);
+    border-radius: 35px;
+    font-size: clamp(18px, 2vw, 24px);
+  }
+
+  .how__step-title {
+    height: auto;
+    min-height: clamp(44px, 5vw, 60px);
+    margin-top: clamp(10px, 1.4vw, 18px);
+    font-size: clamp(17px, 1.9vw, 24px);
+  }
+
+  .how__reveal {
+    /* Measured, not guessed: the tallest body across all three cards over
+       721-1179px needs 202px (top offset + copy + 24px of breathing room).
+       212 leaves ~10px for font-rendering variance and small copy edits, and
+       the width sweep asserts nothing clips. */
+    --reveal-closed: 52px;
+    --reveal-open: 212px;
+  }
+
+  .how__arrow {
+    top: 14px;
+    width: 18px;
+    height: 20px;
+  }
+
+  @keyframes how-arrow-bob {
+    0%, 100% { transform: translate(-50%, -2px); }
+    50% { transform: translate(-50%, 2px); }
+  }
+
+  .how__body {
+    top: 46px;
+    height: auto;
+    justify-content: flex-start;
+    font-size: clamp(14px, 1.6vw, 18px);
+  }
+}
+
+@media (max-width: 720px) {
+  .how__steps {
+    grid-template-columns: 1fr;
+  }
+
+  .how__reveal {
+    /* Single column: tallest measured need is 140px across 320-720px. */
+    --reveal-open: 152px;
+  }
+}
+
+/* ===========================================================================
+   SIGNALS — "Health doesn't start with a diagnosis"
+   Figma node 435-77 for the layout, 436-183 for the two text states.
+
+   Six blurbs, one expanded at a time. Expanded is 700 wide on Cream with
+   Turquoise text and a photo; collapsed is 244 on Turquoise with Cream text
+   and a one-line summary. Connection starts open.
+
+   Cards keep their row and order — only widths change — because a row holding
+   the wide card is 700 + 244 + 244 + 2x18 = 1224, exactly the content width
+   between the 108 gutters. A row with none is 244x3 + 36 = 768.
+   =========================================================================== */
+
+.signals-shell {
+  container-type: inline-size;
+  width: 100%;
+}
+
+.signals {
+  --u: calc(100cqw / 1440);
+  --bleed-color: var(--light-blue);
+  position: relative;
+  width: 100%;
+  aspect-ratio: 1440 / 1114;
+  background: var(--light-blue);
+}
+
+.signals__title {
+  position: absolute;
+  left: calc(644 * var(--u));
+  top: calc(64 * var(--u));
+  width: calc(688 * var(--u));
+  height: calc(50 * var(--u));
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  text-align: center;
+  font-size: calc(40 * var(--u));
+  line-height: var(--lh-auto);
+  font-weight: 800;
+  color: var(--turquoise);
+  margin: 0;
+}
+
+.signals__row {
+  position: absolute;
+  left: calc(108 * var(--u));
+  display: flex;
+  gap: calc(18 * var(--u));
+  list-style: none;
+  margin: 0;
+  padding: 0;
+}
+
+.signals__row--1 { top: calc(149 * var(--u)); }
+.signals__row--2 { top: calc(597 * var(--u)); }
+
+.signals__card {
+  position: relative;
+  flex: none;
+  height: calc(413 * var(--u));
+  border-radius: calc(70 * var(--u));
+  box-shadow: var(--shadow-tint);
+  overflow: hidden;
+  background: var(--turquoise);
+  color: var(--cream);
+  border: 0;
+  padding: 0;
+  margin: 0;
+  text-align: left;
+  font-family: inherit;
+  cursor: pointer;
+  transition: background-color 0.55s ease-in-out, color 0.55s ease-in-out;
+}
+
+.signals__card[data-open="true"] {
+  background: var(--cream);
+  color: var(--turquoise);
+}
+
+.signals__card-title {
+  position: absolute;
+  left: calc(31 * var(--u));
+  top: calc(35 * var(--u));
+  font-size: calc(32 * var(--u));
+  line-height: var(--lh-auto);
+  font-weight: 800;
+  color: inherit;
+  margin: 0;
+}
+
+/* Both body boxes bottom out at the same place in Figma (373 collapsed, 372
+   expanded), so the copy is anchored from the bottom and only its width
+   animates — no need to interpolate top and height as well. */
+.signals__card-body {
+  position: absolute;
+  left: calc(31 * var(--u));
+  bottom: calc(41 * var(--u));
+  font-size: calc(24 * var(--u));
+  line-height: var(--lh-auto);
+  font-weight: 500;
+  color: inherit;
+  margin: 0;
+}
+
+/* Sits outside a collapsed card's 244 width and is clipped by overflow until
+   the card widens, so it only has to fade. */
+.signals__photo {
+  position: absolute;
+  left: calc(313 * var(--u));
+  top: calc(35 * var(--u));
+  width: calc(355 * var(--u));
+  height: calc(346 * var(--u));
+  border-radius: calc(35 * var(--u));
+  overflow: hidden;
+  background: var(--turquoise);
+}
+
+/* 461x346 render in a 355 window at x=-90. Every photo here is 4:3, which is
+   the ratio that window expects, so one crop serves all six. max-width undoes
+   Tailwind preflight, which would otherwise cap the image and cancel it. */
+.signals__photo img {
+  position: absolute;
+  left: -25.352%;
+  top: 0;
+  width: 129.859%;
+  max-width: none;
+  height: 100%;
+  object-fit: cover;
+  display: block;
+}
+
+/* ===========================================================================
+   SIGNALS — COMPACT
+   A 244/1440 card is 17% of the viewport, so below 1180 the blurbs stack and
+   every one shows its full copy and photo — there is nothing to reveal.
+   =========================================================================== */
+
+@media (max-width: 1179px) {
+  .signals {
+    aspect-ratio: auto;
+    padding: clamp(40px, 5vw, 64px) var(--page-gutter);
+    box-sizing: border-box;
+  }
+
+  .signals__title,
+  .signals__row,
+  .signals__card,
+  .signals__card-title,
+  .signals__card-body,
+  .signals__photo {
+    position: static;
+    left: auto;
+    top: auto;
+    bottom: auto;
+    width: auto !important;
+    height: auto;
+  }
+
+  .signals__title {
+    text-align: center;
+    font-size: clamp(26px, 2.9412vw, 40px);
+    margin-bottom: clamp(20px, 2.6vw, 35px);
+  }
+
+  .signals__row {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
+    gap: clamp(14px, 1.8vw, 18px);
+  }
+
+  .signals__row--1 { margin-bottom: clamp(14px, 1.8vw, 18px); }
+
+  .signals__card {
+    display: grid;
+    gap: clamp(10px, 1.4vw, 16px);
+    padding: clamp(20px, 2.6vw, 31px);
+    border-radius: clamp(24px, 4vw, 70px);
+    box-sizing: border-box;
+    background: var(--cream);
+    color: var(--turquoise);
+    cursor: default;
+  }
+
+  .signals__card-title { font-size: clamp(20px, 2.3vw, 32px); }
+  .signals__card-body { font-size: clamp(15px, 1.8vw, 24px); }
+
+  .signals__photo {
+    position: relative;
+    aspect-ratio: 355 / 346;
+    border-radius: clamp(16px, 2.4vw, 35px);
+    opacity: 1 !important;
+  }
+}
+
+/* ===========================================================================
+   AUDIENCES — "One problem. Four places to intervene"
+   Figma: 1440x1190. Four tabs; selecting one changes the background, the
+   photo and the copy beneath. The pill bar itself never moves or fades — it
+   only recolours.
+
+     heading   1440x60  at 0,64      (block, not flex-centred, per Figma)
+     photo     1224x611 at 108,173   (1224x918 image at y=-153)
+     bar       680x53   at 380,887   radius 30, 5px inset
+     tab head  680x40   at 380,1020
+     tab body  680x60   at 380,1084
+
+   The four tabs tile the bar's inner 5..675, splitting at the midpoint between
+   adjacent Figma label boxes. That reproduces the one pill Figma gives us
+   (left 5, width 154) exactly and sums to 680:
+     154 | 193.5 | 187 | 135.5
+   =========================================================================== */
+
+.audiences-shell {
+  container-type: inline-size;
+  width: 100%;
+}
+
+.audiences {
+  --u: calc(100cqw / 1440);
+  --bleed-color: var(--aud-bg);
+  position: relative;
+  width: 100%;
+  aspect-ratio: 1440 / 1190;
+  background: var(--aud-bg);
+  color: var(--aud-fg);
+  /* box-shadow must be in here. .bleed-bg paints everything outside the 1440
+     stage with a 100vmax shadow spread, so leaving it out made the sides snap
+     to the new colour while the centre cross-faded. */
+  transition: background-color 0.6s ease, color 0.6s ease,
+    box-shadow 0.6s ease;
+}
+
+/* y=69, not 64: the full-page frame says 64 but all three individual state
+   frames say 69, and the heading must not move between tabs. */
+.audiences__title {
+  position: absolute;
+  left: 0;
+  top: calc(69 * var(--u));
+  width: 100%;
+  height: calc(60 * var(--u));
+  text-align: center;
+  font-size: calc(40 * var(--u));
+  line-height: var(--lh-auto);
+  font-weight: 800;
+  color: var(--aud-fg);
+  margin: 0;
+  transition: color 0.6s ease;
+}
+
+.audiences__figure {
+  position: absolute;
+  left: calc(108 * var(--u));
+  top: calc(173 * var(--u));
+  width: calc(1224 * var(--u));
+  height: calc(611 * var(--u));
+  border-radius: calc(70 * var(--u));
+  overflow: hidden;
+  background: var(--cream);
+  box-shadow: var(--shadow-lg);
+  margin: 0;
+}
+
+/* All four photos are mounted at once, stacked, and cross-faded by opacity.
+   Mounting on demand meant the incoming image had to download mid-transition,
+   which is what made the swap look like a glitch rather than a fade.
+
+   Every state renders its photo 1224 wide with its own vertical offset, and
+   every source ratio is under the container's 2.003, so `cover` scales by
+   width and the offset becomes object-position offset/(height-611). That
+   value is per-image, set inline from the data table. (Figma stacks two <img>
+   in a couple of states; that is an export artefact, one is enough.) */
+.audiences__slide {
+  position: absolute;
+  inset: 0;
+}
+
+.audiences__figure img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  display: block;
+}
+
+/* --- the tab bar ---------------------------------------------------------- */
+
+.audiences__tabs {
+  position: absolute;
+  left: calc(380 * var(--u));
+  top: calc(887 * var(--u));
+  width: calc(680 * var(--u));
+  height: calc(53 * var(--u));
+  padding: calc(5 * var(--u));
+  box-sizing: border-box;
+  display: flex;
+  background: var(--cream);
+  border-radius: calc(30 * var(--u));
+  list-style: none;
+  margin: 0;
+}
+
+/* The moving highlight. Positioned from measured tab geometry rather than
+   hard-coded offsets, so it stays correct when the bar wraps on narrow
+   screens. */
+/* top/left are 0 because the measured offsets already include the bar's 5px
+   inset; setting both would double-count it. */
+.audiences__pill {
+  position: absolute;
+  top: 0;
+  left: 0;
+  height: calc(43 * var(--u));
+  border-radius: calc(25 * var(--u));
+  background: var(--aud-pill);
+  transition: background-color 0.6s ease;
+  pointer-events: none;
+}
+
+.audiences__tab {
+  position: relative;
+  z-index: 1;
+  flex: none;
+  height: calc(43 * var(--u));
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: none;
+  border: 0;
+  padding: 0;
+  cursor: pointer;
+  font-family: inherit;
+  font-size: calc(16 * var(--u));
+  line-height: var(--lh-auto);
+  font-weight: 500;
+  color: var(--aud-accent);
+  white-space: nowrap;
+  transition: color 0.6s ease;
+}
+
+/* One of these two is always display:none, which keeps it out of the
+   accessibility tree as well as off the screen — so each button's accessible
+   name is exactly the label you can read on it. */
+.audiences__tab-short {
+  display: none;
+}
+
+.audiences__tab[aria-selected="true"] {
+  color: var(--aud-pill-fg);
+}
+
+/* Widths come from the data table as an inline style rather than nth-child:
+   the pill is a sibling in this bar, so positional selectors would be off by
+   one and would break again if the DOM order changed. */
+
+/* --- the copy that swaps -------------------------------------------------- */
+
+.audiences__panel-title {
+  position: absolute;
+  left: calc(380 * var(--u));
+  top: calc(1020 * var(--u));
+  width: calc(680 * var(--u));
+  height: calc(40 * var(--u));
+  text-align: center;
+  font-size: calc(32 * var(--u));
+  line-height: var(--lh-auto);
+  font-weight: 800;
+  color: var(--aud-fg);
+  margin: 0;
+}
+
+.audiences__panel-body {
+  position: absolute;
+  left: calc(380 * var(--u));
+  top: calc(1084 * var(--u));
+  width: calc(680 * var(--u));
+  height: calc(60 * var(--u));
+  text-align: center;
+  font-size: calc(24 * var(--u));
+  line-height: var(--lh-auto);
+  font-weight: 500;
+  color: var(--aud-fg);
+  margin: 0;
+}
+
+/* ===========================================================================
+   AUDIENCES — COMPACT
+   The vertical order is preserved, per the brief: heading, photo, tabs, copy.
+   Only the tab bar changes shape — four labels cannot share one row much
+   below 800px, so it becomes a 2x2 grid and the pill follows by measurement.
+   =========================================================================== */
+
+@media (max-width: 1179px) {
+  .audiences {
+    aspect-ratio: auto;
+    padding: clamp(40px, 5vw, 64px) var(--page-gutter);
+    box-sizing: border-box;
+  }
+
+  .audiences__title,
+  .audiences__figure,
+  .audiences__tabs,
+  .audiences__panel-title,
+  .audiences__panel-body {
+    position: static;
+    left: auto;
+    top: auto;
+    width: auto;
+    height: auto;
+  }
+
+  .audiences__title {
+    font-size: clamp(26px, 2.9412vw, 40px);
+    margin-bottom: clamp(20px, 2.6vw, 35px);
+  }
+
+  .audiences__figure {
+    position: relative;
+    aspect-ratio: 1224 / 611;
+    border-radius: clamp(24px, 4vw, 70px);
+    margin-bottom: clamp(28px, 4vw, 56px);
+  }
+
+  .audiences__tabs {
+    position: relative;
+    width: min(680px, 100%);
+    margin-inline: auto;
+    padding: 5px;
+    border-radius: 30px;
+  }
+
+  .audiences__tab {
+    flex: 1 1 0;
+    width: auto !important;
+    height: 43px;
+    font-size: clamp(13px, 1.5vw, 16px);
+  }
+
+  .audiences__pill {
+    top: 0;
+    height: 43px;
+    border-radius: 25px;
+  }
+
+  .audiences__panel-title {
+    margin-top: clamp(24px, 3.4vw, 46px);
+    font-size: clamp(21px, 2.4vw, 32px);
+  }
+
+  .audiences__panel-body {
+    margin-top: clamp(10px, 1.6vw, 24px);
+    font-size: clamp(16px, 1.8vw, 24px);
+  }
+}
+
+@media (max-width: 800px) {
+  /* The bar stays a single row of four, one line of text per tab, at the
+     same 43px height it has on the wide layout. It was a 2x2 grid here,
+     which reads as two separate controls rather than one segmented switch.
+
+     Keeping every label on ONE line is what forces the short labels: the
+     four full ones total 68 characters, and no type size that fits them
+     across a 390px bar is readable. Shortened, they total 37 and sit
+     comfortably at ~12px. See `tabShort` in AudiencesSection. */
+  .audiences__tabs {
+    display: flex;
+    gap: 0;
+    border-radius: 26px;
+  }
+
+  .audiences__tab-full {
+    display: none;
+  }
+
+  .audiences__tab-short {
+    display: inline;
+  }
+
+  /* Content-sized rather than four equal quarters, which is how the wide
+     bar works too (154 / 193 / 188 / 135). "Payers" does not need the room
+     "Public Health" does, and taking it would push the longest label into
+     a second line — the thing this is here to prevent. */
+  .audiences__tab {
+    flex: 1 1 auto;
+    width: auto !important;
+    min-width: 0;
+    height: 43px;
+    padding-inline: clamp(4px, 1.6vw, 12px);
+    font-size: clamp(10.5px, 3vw, 15px);
+  }
+}
+
+/* ===========================================================================
+   DEPTH — "Uncommon depth for lasting steadiness"
+   Figma node 401-267: 1440x974 on Cream. Three overlapping cards, the lower
+   two rotated, dealt in from off-stage.
+
+     heading   753x50  at 108,56
+     lede      266x217 at 108,160
+     card 1    833x853       at 499,160        0deg   Sovhi Green
+     card 2    756.76x585.36 at 462,414.87    -4deg   Teal
+     card 3    690.91x290.79 at 456,681.40    -5deg   Light Blue
+
+   As in the stats section, Figma flattens each rotated group — card and both
+   text boxes each carry their own rotate() about their own top-left — so the
+   text offsets were recovered by inverting the rotation. Each card is then one
+   rotated unit that can be dealt as a whole.
+   =========================================================================== */
+
+.depth-shell {
+  container-type: inline-size;
+  width: 100%;
+}
+
+.depth {
+  --u: calc(100cqw / 1440);
+  position: relative;
+  width: 100%;
+  /* 1070, not Figma's 974: the "Adaptive Guidance" card runs to y=1013 and
+     its shadow to 1043, so the frame was cutting 39px off the bottom of it.
+     Extended to clear both with a bottom margin matching the 56px at the top. */
+  aspect-ratio: 1440 / 1070;
+  background: var(--cream);
+  /* The cards wait off-stage past the bottom-right corner until dealt. */
+  overflow: clip;
+}
+
+.depth__title {
+  position: absolute;
+  left: calc(108 * var(--u));
+  top: calc(56 * var(--u));
+  width: calc(753 * var(--u));
+  height: calc(50 * var(--u));
+  font-size: calc(40 * var(--u));
+  line-height: var(--lh-auto);
+  font-weight: 800;
+  color: var(--orange);
+  margin: 0;
+}
+
+.depth__lede {
+  position: absolute;
+  left: calc(108 * var(--u));
+  top: calc(160 * var(--u));
+  width: calc(266 * var(--u));
+  font-size: calc(20 * var(--u));
+  line-height: var(--lh-auto);
+  font-weight: 500;
+  color: var(--orange);
+  margin: 0;
+}
+
+/* --- the three cards ------------------------------------------------------ */
+
+.depth__card {
+  position: absolute;
+  border-radius: calc(70 * var(--u));
+  box-shadow: var(--shadow-lg);
+  /* Figma rotates about the top-left, and the recovered text offsets assume
+     that origin. Motion owns `rotate`, so it must not be set in CSS. */
+  transform-origin: top left;
+  will-change: transform, opacity;
+}
+
+.depth__card-title {
+  position: absolute;
+  font-size: calc(32 * var(--u));
+  line-height: var(--lh-auto);
+  font-weight: 800;
+  margin: 0;
+}
+
+.depth__card-body {
+  position: absolute;
+  font-size: calc(24 * var(--u));
+  line-height: var(--lh-auto);
+  font-weight: 500;
+  margin: 0;
+}
+
+.depth__card--adaptive {
+  left: calc(499 * var(--u));
+  top: calc(160 * var(--u));
+  width: calc(833 * var(--u));
+  height: calc(853 * var(--u));
+  background: var(--sovhi-green);
+  color: var(--light-blue);
+}
+.depth__card--adaptive .depth__card-title {
+  left: calc(74 * var(--u));
+  top: calc(75 * var(--u));
+  width: calc(670 * var(--u));
+}
+.depth__card--adaptive .depth__card-body {
+  left: calc(74 * var(--u));
+  top: calc(127 * var(--u));
+  width: calc(670 * var(--u));
+}
+
+.depth__card--baseline {
+  left: calc(462 * var(--u));
+  top: calc(414.87 * var(--u));
+  width: calc(756.76 * var(--u));
+  height: calc(585.36 * var(--u));
+  background: var(--teal);
+  color: var(--sovhi-green);
+}
+.depth__card--baseline .depth__card-title {
+  left: calc(79.62 * var(--u));
+  top: calc(70.17 * var(--u));
+  width: calc(563.68 * var(--u));
+}
+.depth__card--baseline .depth__card-body {
+  left: calc(82.01 * var(--u));
+  top: calc(121.94 * var(--u));
+  width: calc(563.68 * var(--u));
+}
+
+.depth__card--pathway {
+  left: calc(456 * var(--u));
+  top: calc(681.4 * var(--u));
+  width: calc(690.91 * var(--u));
+  height: calc(290.79 * var(--u));
+  background: var(--light-blue);
+  color: var(--turquoise);
+}
+.depth__card--pathway .depth__card-title {
+  left: calc(91.71 * var(--u));
+  top: calc(77.4 * var(--u));
+  width: calc(563.68 * var(--u));
+}
+.depth__card--pathway .depth__card-body {
+  left: calc(92.77 * var(--u));
+  top: calc(129.19 * var(--u));
+  width: calc(563.68 * var(--u));
+}
+
+/* ===========================================================================
+   DEPTH — COMPACT
+   Below 1180 the cards leave the --u grid, because at phone widths every
+   dimension on that grid scales to illegibility (a 32px title becomes 9px).
+
+   What they do NOT do any more is flatten into a plain stack. They sit in
+   flow, overlapped by a negative margin, still fanned at their Figma angles,
+   and still dealt in from off-stage — so the deck survives the breakpoint
+   and only its scale changes. Heights are content-driven here rather than
+   fixed, which is what keeps the type legible without any card overflowing.
+
+   The lede stays above the deck rather than beside it, as it is on the wide
+   layout; DOM order already puts it there.
+   =========================================================================== */
+
+@media (max-width: 1179px) {
+  .depth {
+    aspect-ratio: auto;
+    /* Clipped horizontally so a card flying in from off-stage right cannot
+       paint over the sections beside it, but open vertically so the fanned
+       corners and their shadows are not sliced off. */
+    overflow-x: clip;
+    overflow-y: visible;
+    display: flex;
+    flex-direction: column;
+    padding: clamp(40px, 5vw, 64px) var(--page-gutter);
+    box-sizing: border-box;
+  }
+
+  .depth__title,
+  .depth__lede,
+  .depth__card,
+  .depth__card-title,
+  .depth__card-body {
+    position: static;
+    left: auto;
+    top: auto;
+    width: auto;
+    height: auto;
+  }
+
+  .depth__title {
+    font-size: clamp(26px, 2.9412vw, 40px);
+    margin-bottom: clamp(14px, 1.8vw, 24px);
+  }
+
+  .depth__lede {
+    max-width: 56ch;
+    font-size: clamp(16px, 1.7vw, 20px);
+    margin-bottom: clamp(28px, 3.8vw, 48px);
+  }
+
+  .depth__card {
+    display: flex;
+    flex-direction: column;
+    gap: clamp(8px, 1vw, 14px);
+    padding: clamp(22px, 3.2vw, 44px);
+    border-radius: clamp(28px, 4.8vw, 70px);
+    box-sizing: border-box;
+    /* Centre, not top-left: on the wide layout the origin has to match
+       Figma's rotate-about-top-left so the recovered text offsets stay
+       true, but here each card is a plain flow box and turning it about
+       its middle is what keeps the fan balanced. */
+    transform-origin: center;
+  }
+
+  /* The overlap. Negative margin rather than absolute offsets, so a card
+     that needs an extra line of text simply gets taller and pushes the one
+     below it down — the deck cannot collide with itself. */
+  .depth__card + .depth__card {
+    margin-top: calc(-1 * clamp(18px, 3vw, 40px));
+  }
+
+  /* Widths step down and the cards shift across, echoing the wide layout,
+     where the three run 833 / 757 / 691 from roughly the same left edge.
+     Later cards paint over earlier ones by DOM order, which is the same
+     back-to-front order they are dealt in. */
+  .depth__card--adaptive {
+    width: 100%;
+  }
+
+  .depth__card--baseline {
+    width: 96%;
+    margin-left: auto;
+  }
+
+  .depth__card--pathway {
+    width: 91%;
+  }
+
+  .depth__card-title {
+    font-size: clamp(21px, 2.4vw, 32px);
+  }
+
+  .depth__card-body {
+    font-size: clamp(16px, 1.8vw, 24px);
+  }
+}
+
+/* ===========================================================================
+   TEAM — "Meet our dream team"
+   Figma node 435-77: 1440x830 on Cream. Five 287.69x610 cards on a 317.69
+   pitch (30px gap) starting at x=109, so the track is 1558.45 wide and the
+   fifth card runs 227px past the frame. A prev/next pill above scrolls it.
+
+   One step is one card pitch. maxScroll is 336.45 (the point where the last
+   card sits at the same 109 gutter the first one starts at), which is 1.06
+   pitches — rounded to a single step, so every click moves exactly one card
+   and the end margin lands at 90 rather than 109. A consistent step beats a
+   19px stub click.
+   =========================================================================== */
+
+.team-shell {
+  container-type: inline-size;
+  width: 100%;
+}
+
+.team {
+  --u: calc(100cqw / 1440);
+  position: relative;
+  width: 100%;
+  aspect-ratio: 1440 / 830;
+  background: var(--cream);
+  overflow: clip;
+}
+
+.team__title {
+  position: absolute;
+  left: 0;
+  top: calc(50 * var(--u));
+  width: 100%;
+  height: calc(50 * var(--u));
+  text-align: center;
+  font-size: calc(40 * var(--u));
+  line-height: var(--lh-auto);
+  font-weight: 800;
+  color: var(--sovhi-green);
+  margin: 0;
+}
+
+.team__track {
+  position: absolute;
+  inset: 0;
+  z-index: 1;
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  will-change: transform;
+}
+
+/* --- a card --------------------------------------------------------------- */
+
+.team__card {
+  position: absolute;
+  width: calc(287.69 * var(--u));
+  height: calc(610 * var(--u));
+  border-radius: calc(35 * var(--u));
+  overflow: hidden;
+  box-shadow: var(--shadow-lg);
+  background: var(--team-accent);
+}
+
+.team__photo {
+  position: absolute;
+  display: block;
+  /* Tailwind preflight caps images at 100%, which would undo Figma's crops. */
+  max-width: none;
+  object-fit: cover;
+}
+
+/* The lower panel is 287 wide inside a 287.69 card, exactly as Figma has it;
+   the 0.69px of accent left showing on the right edge is in the design. */
+.team__panel {
+  position: absolute;
+  left: 0;
+  top: calc(281 * var(--u));
+  width: calc(287 * var(--u));
+  height: calc(329 * var(--u));
+  background: var(--team-dark);
+  border-radius: calc(35 * var(--u));
+}
+
+/* Rounded on the left only — it reads as a tab running off the card's edge. */
+.team__badge {
+  position: absolute;
+  left: calc(176 * var(--u));
+  top: calc(35 * var(--u));
+  width: calc(111 * var(--u));
+  height: calc(61 * var(--u));
+  background: var(--team-dark);
+  border-top-left-radius: calc(35 * var(--u));
+  border-bottom-left-radius: calc(35 * var(--u));
+}
+
+.team__badge-text {
+  position: absolute;
+  left: calc(195 * var(--u));
+  top: calc(49 * var(--u));
+  width: calc(92 * var(--u));
+  height: calc(32 * var(--u));
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  font-size: calc(32 * var(--u));
+  line-height: var(--lh-auto);
+  font-weight: 800;
+  color: var(--team-accent);
+  margin: 0;
+}
+
+.team__name {
+  position: absolute;
+  left: 0;
+  top: calc(288 * var(--u));
+  width: calc(287 * var(--u));
+  height: calc(34 * var(--u));
+  text-align: center;
+  font-size: calc(30 * var(--u));
+  line-height: var(--lh-auto);
+  font-weight: 800;
+  color: var(--team-accent);
+  margin: 0;
+}
+
+.team__bio {
+  position: absolute;
+  left: calc(27 * var(--u));
+  top: calc(340 * var(--u));
+  width: calc(233 * var(--u));
+  height: calc(250 * var(--u));
+  display: flex;
+  flex-direction: column;
+  justify-content: flex-end; /* Figma bottom-aligns the bio */
+  text-align: center;
+  font-size: calc(16 * var(--u));
+  line-height: var(--lh-auto);
+  font-weight: 500;
+  color: var(--team-accent);
+  margin: 0;
+}
+
+.team__bio p { margin: 0; }
+.team__bio p + p { margin-top: 1em; }
+
+/* --- prev / next ---------------------------------------------------------- */
+
+.team__nav {
+  position: absolute;
+  /* Above the track. The track is inset:0 and comes later in the DOM, so
+     without this it sits on top of the pill and swallows every click. */
+  z-index: 2;
+  left: calc(1211 * var(--u));
+  top: calc(77 * var(--u));
+  width: calc(121 * var(--u));
+  height: calc(56 * var(--u));
+  display: flex;
+  background: var(--sovhi-green);
+  border-radius: calc(35 * var(--u));
+  overflow: hidden;
+}
+
+.team__nav-btn {
+  flex: 1 1 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: none;
+  border: 0;
+  padding: 0;
+  cursor: pointer;
+  color: var(--cream);
+  transition: opacity 0.2s ease;
+}
+
+.team__nav-btn:disabled {
+  opacity: 0.35;
+  cursor: default;
+}
+
+.team__nav-btn svg {
+  width: calc(11 * var(--u));
+  height: calc(18 * var(--u));
+  display: block;
+}
+
+/* ===========================================================================
+   TEAM — COMPACT
+   The carousel survives down to phone widths: below 1180 the cards keep their
+   proportions but the track scrolls natively, so the nav pill and swipe both
+   work and nothing is stranded off-screen with no way to reach it.
+   =========================================================================== */
+
+@media (max-width: 1179px) {
+  .team {
+    aspect-ratio: auto;
+    overflow: visible;
+    padding: clamp(36px, 4.6vw, 60px) 0 clamp(40px, 5vw, 64px);
+    box-sizing: border-box;
+  }
+
+  .team__title,
+  .team__nav {
+    position: static;
+    left: auto;
+    top: auto;
+    width: auto;
+    height: auto;
+  }
+
+  .team__title {
+    font-size: clamp(26px, 2.9412vw, 40px);
+    margin-bottom: clamp(18px, 2.4vw, 30px);
+  }
+
+  .team__nav {
+    width: 121px;
+    height: 56px;
+    margin: 0 var(--page-gutter) clamp(18px, 2.4vw, 30px) auto;
+    border-radius: 35px;
+  }
+
+  .team__nav-btn svg {
+    width: 11px;
+    height: 18px;
+  }
+
+  /* Native scrolling with snap, so touch users can swipe as well as tap. */
+  .team__track {
+    position: static;
+    inset: auto;
+    display: flex;
+    gap: 30px;
+    padding-inline: var(--page-gutter);
+    overflow-x: auto;
+    scroll-snap-type: x mandatory;
+    /* Snap targets align to the padding edge, not the border edge — without
+       this the first card snaps flush to the screen and the left gutter is
+       scrolled away on load. */
+    scroll-padding-inline: var(--page-gutter);
+    scrollbar-width: none;
+    transform: none !important;
+  }
+
+  .team__track::-webkit-scrollbar { display: none; }
+
+  .team__card {
+    position: relative;
+    left: auto !important;
+    top: auto !important;
+    flex: 0 0 auto;
+    width: min(287.69px, 78vw);
+    height: auto;
+    aspect-ratio: 287.69 / 610;
+    scroll-snap-align: start;
+    border-radius: 35px;
+    /* Mirrors the width formula above, so everything inside the card stays
+       proportional to the card itself. A percentage would not work here:
+       percentages resolve per-property, so `top` would be a share of the
+       height rather than the width. */
+    --u: min(1px, calc(78vw / 287.69));
+  }
+}
+
+/* ===========================================================================
+   WAITLIST — "Be among the first to see what's shaping health earlier"
+   Figma node 401-286: 1440x822 on Cream. Centred copy ringed by eight photo
+   cards that deal in from off-stage, then parallax on scroll.
+
+     eyebrow   150x30  at 644,297
+     heading   757x140 at 341,340   (two lines, explicit <br/> in Figma)
+     CTA       192x45  at 623,480   pill; its label box is 198 wide at 620,
+                                    so both centre on x=719
+
+   Two nested layers per card: the outer carries the scroll parallax, the
+   inner carries the deal. Both animate translateY, so they cannot share an
+   element without fighting.
+   =========================================================================== */
+
+.waitlist-shell {
+  container-type: inline-size;
+  width: 100%;
+}
+
+.waitlist {
+  --u: calc(100cqw / 1440);
+  position: relative;
+  width: 100%;
+  aspect-ratio: 1440 / 822;
+  background: var(--cream);
+  /* Cards wait off-stage past the bottom-right corner until dealt. */
+  overflow: clip;
+}
+
+.waitlist__eyebrow {
+  position: absolute;
+  left: calc(644 * var(--u));
+  top: calc(297 * var(--u));
+  width: calc(150 * var(--u));
+  height: calc(30 * var(--u));
+  text-align: center;
+  font-size: calc(20 * var(--u));
+  line-height: var(--lh-auto);
+  font-weight: 500;
+  color: var(--sovhi-green);
+  margin: 0;
+}
+
+.waitlist__title {
+  position: absolute;
+  left: calc(341 * var(--u));
+  top: calc(340 * var(--u));
+  width: calc(757 * var(--u));
+  height: calc(140 * var(--u));
+  text-align: center;
+  font-size: calc(36 * var(--u));
+  line-height: var(--lh-auto);
+  font-weight: 800;
+  color: var(--sovhi-green);
+  margin: 0;
+}
+
+.waitlist__cta {
+  position: absolute;
+  left: calc(623 * var(--u));
+  top: calc(480 * var(--u));
+  width: calc(192 * var(--u));
+  height: calc(45 * var(--u));
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: var(--sovhi-green);
+  border-radius: calc(70 * var(--u));
+  font-size: calc(20 * var(--u));
+  line-height: var(--lh-auto);
+  font-weight: 500;
+  color: var(--cream);
+  text-decoration: none;
+  font-family: inherit;
+  white-space: nowrap;
+  transition: background-color 320ms ease;
+}
+
+.waitlist__cta:hover,
+.waitlist__cta:focus-visible {
+  background-color: var(--orange);
+}
+
+/* --- the photo cards ------------------------------------------------------ */
+
+/* Outer: Figma position and size, and the scroll parallax. */
+.waitlist__card {
+  position: absolute;
+  will-change: transform;
+}
+
+/* Middle: a slow idle drift, so the arrangement breathes once it has landed.
+   It needs its own element because the outer already animates translateY for
+   parallax and the inner animates it for the deal — three transforms, three
+   layers. Amplitudes stay under each card's remaining headroom to the section
+   edge (the tightest has 42px, of which parallax already uses ~34). */
+.waitlist__card-float {
+  position: absolute;
+  inset: 0;
+  animation: waitlist-float var(--float-dur, 7s) ease-in-out
+    var(--float-delay, 0s) infinite;
+  will-change: transform;
+}
+
+@keyframes waitlist-float {
+  0%,
+  100% {
+    transform: translateY(calc(var(--float-y, 5px) * -1))
+      rotate(calc(var(--float-rot, 0.5deg) * -1));
+  }
+  50% {
+    transform: translateY(var(--float-y, 5px)) rotate(var(--float-rot, 0.5deg));
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .waitlist__card-float {
+    animation: none;
+  }
+}
+
+/* Inner: the visible card, and the deal transform. */
+.waitlist__card-inner {
+  position: absolute;
+  inset: 0;
+  border-radius: calc(35 * var(--u));
+  overflow: hidden;
+  background: var(--sovhi-green);
+  box-shadow: var(--shadow-md);
+  will-change: transform, opacity;
+}
+
+.waitlist__card img {
+  position: absolute;
+  display: block;
+  /* Tailwind preflight caps images at 100%, which would undo Figma's crops. */
+  max-width: none;
+  object-fit: cover;
+}
+
+/* ===========================================================================
+   WAITLIST — COMPACT
+   The scattered ring needs the width to read. Below 1180 the copy stacks and
+   the photos become an even band above and below it, keeping the section's
+   character without the cards colliding with the text.
+   =========================================================================== */
+
+@media (max-width: 1179px) {
+  .waitlist {
+    aspect-ratio: auto;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    padding: clamp(36px, 4.6vw, 60px) var(--page-gutter);
+    box-sizing: border-box;
+  }
+
+  .waitlist__eyebrow,
+  .waitlist__title,
+  .waitlist__cta {
+    position: static;
+    left: auto;
+    top: auto;
+    width: auto;
+    height: auto;
+  }
+
+  .waitlist__eyebrow { font-size: clamp(16px, 1.7vw, 20px); }
+
+  .waitlist__title {
+    max-width: 22ch;
+    font-size: clamp(24px, 2.6vw, 36px);
+    margin: clamp(6px, 0.8vw, 10px) 0 clamp(20px, 2.6vw, 32px);
+  }
+
+  .waitlist__cta {
+    width: auto;
+    min-width: 192px;
+    height: 45px;
+    padding-inline: 24px;
+    border-radius: 70px;
+    font-size: clamp(16px, 1.7vw, 20px);
+  }
+
+  /* Two rows of photos, one above the copy and one below, in DOM order. */
+  .waitlist__card {
+    position: relative;
+    left: auto !important;
+    top: auto !important;
+    flex: 0 0 auto;
+    width: clamp(96px, 20vw, 150px);
+    aspect-ratio: 1 / 1;
+  }
+
+  .waitlist__strip {
+    display: flex;
+    justify-content: center;
+    flex-wrap: wrap;
+    gap: clamp(8px, 1.4vw, 14px);
+    width: 100%;
+  }
+
+  .waitlist__strip--top { margin-bottom: clamp(20px, 2.6vw, 32px); }
+  .waitlist__strip--bottom { margin-top: clamp(20px, 2.6vw, 32px); }
+
+  .waitlist__card-inner { border-radius: clamp(16px, 2.4vw, 35px); }
+
+  /* Figma's per-card crops assume the desktop boxes; here the cards are
+     square, so a plain cover crop is the sane fallback. */
+  .waitlist__card img {
+    inset: 0 !important;
+    width: 100% !important;
+    height: 100% !important;
+  }
+}
+
+/* ===========================================================================
+   FOOTER — Figma node 401-318: 1440x744 on Cream.
+   A dark panel inset 20px, rounded on its top corners only, that rises out of
+   the bottom as you scroll. The logo straddles its top edge and grows to size.
+
+   The content sits INSIDE the panel so it rises with it and the logo overlaps
+   the edge naturally, which means every offset here is panel-relative:
+   Figma's section coordinates minus (20, 194).
+   =========================================================================== */
+
+.footer-shell {
+  container-type: inline-size;
+  width: 100%;
+}
+
+.footer {
+  --u: calc(100cqw / 1440);
+  position: relative;
+  width: 100%;
+  aspect-ratio: 1440 / 744;
+  background: var(--cream);
+  /* Hides the panel while it is pushed below its resting place. */
+  overflow: clip;
+}
+
+.footer__panel {
+  position: absolute;
+  left: calc(20 * var(--u));
+  top: calc(194 * var(--u));
+  width: calc(1400 * var(--u));
+  height: calc(550 * var(--u));
+  background: var(--off-black);
+  border-top-left-radius: calc(70 * var(--u));
+  border-top-right-radius: calc(70 * var(--u));
+  /* Figma casts this one upward. */
+  box-shadow: var(--shadow-up);
+  will-change: transform;
+}
+
+/* 244 canvas holding a 224 mark inset 10, so -10 on each axis lands the mark
+   on Figma's box. Grows from its centre. */
+.footer__logo {
+  position: absolute;
+  left: calc(577 * var(--u));
+  top: calc(-121 * var(--u));
+  width: calc(244 * var(--u));
+  height: calc(244 * var(--u));
+  transform-origin: center;
+  will-change: transform;
+}
+
+.footer__logo svg { width: 100%; height: 100%; display: block; }
+
+.footer__wordmark {
+  position: absolute;
+  left: calc(508 * var(--u));
+  top: calc(119 * var(--u));
+  width: calc(382 * var(--u));
+  height: calc(160 * var(--u));
+  text-align: center;
+  font-size: calc(64 * var(--u));
+  /* The only explicit line-height on the site: 67.2/64 = 1.05. */
+  line-height: 1.05;
+  font-weight: 800;
+  color: var(--cream);
+  text-shadow: var(--text-shadow-strong);
+  margin: 0;
+}
+
+.footer__tagline {
+  position: absolute;
+  left: calc(270 * var(--u));
+  top: calc(269 * var(--u));
+  width: calc(859 * var(--u));
+  height: calc(25 * var(--u));
+  text-align: center;
+  font-size: calc(20 * var(--u));
+  line-height: var(--lh-auto);
+  font-weight: 800;
+  color: var(--cream);
+  text-shadow: var(--text-shadow-strong);
+  margin: 0;
+  /* Revealed by a feathered mask travelling left to right. Same overshoot
+     trick as the hero highlight: 110% -> -10% so both ends rest on a clean
+     state instead of mid-feather. */
+  -webkit-mask-image: linear-gradient(90deg, #000 0%, #000 49%, transparent 51%, transparent 100%);
+  mask-image: linear-gradient(90deg, #000 0%, #000 49%, transparent 51%, transparent 100%);
+  /* Same correction as the hero sweep: 300% travelling 75% -> 25%, so the
+     element is always fully covered. A mask that does not reach part of the
+     element leaves it masked out entirely. */
+  -webkit-mask-size: 300% 100%;
+  mask-size: 300% 100%;
+  -webkit-mask-position: 75% 0;
+  mask-position: 75% 0;
+  -webkit-mask-repeat: repeat-x;
+  mask-repeat: repeat-x;
+  transition:
+    -webkit-mask-position 1.4s cubic-bezier(0.45, 0.15, 0.55, 0.85),
+    mask-position 1.4s cubic-bezier(0.45, 0.15, 0.55, 0.85);
+}
+
+.footer__tagline[data-lit="true"] {
+  -webkit-mask-position: 25% 0;
+  mask-position: 25% 0;
+}
+
+.footer__col-title {
+  position: absolute;
+  width: calc(155 * var(--u));
+  height: calc(40 * var(--u));
+  font-size: calc(32 * var(--u));
+  line-height: var(--lh-auto);
+  font-weight: 800;
+  color: var(--cream);
+  margin: 0;
+}
+
+.footer__col-title--contact { left: calc(88 * var(--u)); top: calc(129 * var(--u)); }
+.footer__col-title--explore { left: calc(1024 * var(--u)); top: calc(266 * var(--u)); }
+
+.footer__item {
+  position: absolute;
+  height: calc(23 * var(--u));
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  font-size: calc(18 * var(--u));
+  line-height: var(--lh-auto);
+  font-weight: 500;
+  color: var(--cream);
+  text-decoration: none;
+  margin: 0;
+}
+
+.footer__item--phone    { left: calc(88 * var(--u));    top: calc(241 * var(--u));    width: calc(157 * var(--u)); }
+.footer__item--email    { left: calc(88 * var(--u));    top: calc(271 * var(--u));    width: calc(157 * var(--u)); }
+.footer__item--linkedin { left: calc(269 * var(--u)); top: calc(271 * var(--u)); width: calc(70 * var(--u)); }
+
+.footer__item--c1 { left: calc(1024 * var(--u)); width: calc(157 * var(--u)); }
+.footer__item--c2 { left: calc(1208 * var(--u)); width: calc(105 * var(--u)); }
+.footer__item--r1 { top: calc(318 * var(--u)); }
+.footer__item--r2 { top: calc(348 * var(--u)); }
+.footer__item--r3 { top: calc(378 * var(--u)); }
+
+.footer__item--link:hover,
+.footer__item--link:focus-visible { text-decoration: underline; }
+
+.footer__cta {
+  position: absolute;
+  top: calc(347 * var(--u));
+  width: calc(224 * var(--u));
+  height: calc(65 * var(--u));
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: calc(35 * var(--u));
+  font-size: calc(20 * var(--u));
+  line-height: var(--lh-auto);
+  font-weight: 500;
+  color: var(--cream);
+  text-decoration: none;
+  font-family: inherit;
+  white-space: nowrap;
+  transition: filter 320ms ease;
+}
+
+.footer__cta:hover,
+.footer__cta:focus-visible { filter: brightness(1.12); }
+
+.footer__cta--waitlist { left: calc(465 * var(--u)); background: var(--teal); }
+.footer__cta--contact  { left: calc(709 * var(--u)); background: var(--sovhi-green); }
+
+.footer__pill {
+  position: absolute;
+  top: calc(456 * var(--u));
+  height: calc(35 * var(--u));
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: calc(26 * var(--u));
+  background: var(--cream);
+  border-radius: calc(35 * var(--u));
+  font-size: calc(18 * var(--u));
+  line-height: var(--lh-auto);
+  font-weight: 500;
+  color: var(--off-black);
+  margin: 0;
+}
+
+.footer__pill--copyright { left: calc(88 * var(--u)); width: calc(198 * var(--u)); }
+.footer__pill--legal     { left: calc(1051 * var(--u)); width: calc(262 * var(--u)); }
+
+.footer__pill a { color: inherit; text-decoration: none; }
+.footer__pill a:hover,
+.footer__pill a:focus-visible { text-decoration: underline; }
+
+/* ===========================================================================
+   FOOTER — COMPACT
+   The panel becomes a flow container, but the COMPOSITION is kept: logo
+   straddling the top edge, wordmark and tagline centred under it, the two
+   link columns side by side, then the pill row. Only the proportions change.
+
+   It cannot simply keep the --u grid the way the wide layout does. At 390px
+   --u is 0.27, which turns the 18px link text into 5px; the numbers on that
+   grid are unreadable long before the layout stops fitting.
+   =========================================================================== */
+
+@media (max-width: 1179px) {
+  .footer {
+    aspect-ratio: auto;
+    padding-top: clamp(70px, 11vw, 130px);
+  }
+
+  .footer__panel {
+    position: relative;
+    left: auto;
+    top: auto;
+    width: calc(100% - 40px);
+    height: auto;
+    margin: 0 20px;
+    padding: clamp(64px, 8vw, 100px) var(--page-gutter) clamp(28px, 3.4vw, 44px);
+    box-sizing: border-box;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    border-top-left-radius: clamp(28px, 4.8vw, 70px);
+    border-top-right-radius: clamp(28px, 4.8vw, 70px);
+  }
+
+  .footer__wordmark,
+  .footer__tagline,
+  .footer__col-title,
+  .footer__item,
+  .footer__cta,
+  .footer__pill {
+    position: static;
+    left: auto;
+    top: auto;
+    width: auto;
+    height: auto;
+  }
+
+  /* Straddles the panel's top edge, as it does on the wide layout.
+     Centred with a negative margin rather than translateX(-50%) because
+     SiteFooter writes `scale` to this element as an inline transform, and a
+     transform here would be overwritten by it — which is exactly what left
+     the logo sitting half a width to the right. */
+  .footer__logo {
+    --footer-logo-size: clamp(120px, 22vw, 200px);
+    left: 50%;
+    top: calc(-0.5 * var(--footer-logo-size));
+    width: var(--footer-logo-size);
+    height: var(--footer-logo-size);
+    margin-left: calc(-0.5 * var(--footer-logo-size));
+  }
+
+  .footer__wordmark {
+    font-size: clamp(38px, 6vw, 64px);
+    text-align: center;
+    margin-bottom: clamp(8px, 1.2vw, 14px);
+  }
+
+  .footer__tagline {
+    font-size: clamp(16px, 1.9vw, 20px);
+    margin-bottom: clamp(24px, 3.4vw, 40px);
+  }
+
+  /* Side by side, as they are on the wide layout (left 465 and 709 on the
+     same baseline). They share the row rather than taking a fixed width
+     each, which is what stops them wrapping into a stack on a 360px phone. */
+  .footer__actions {
+    display: flex;
+    flex-wrap: nowrap;
+    gap: clamp(10px, 1.6vw, 20px);
+    width: 100%;
+    max-width: 480px;
+    margin-bottom: clamp(32px, 4.4vw, 56px);
+  }
+
+  .footer__cta {
+    flex: 1 1 0;
+    min-width: 0;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: auto;
+    height: 65px;
+    border-radius: 35px;
+    /* Shrinks enough that "Join the waitlist" stays on one line in half of
+       a 360px panel; capped at the wide layout's 20px. */
+    font-size: clamp(13px, 3.4vw, 20px);
+    white-space: nowrap;
+  }
+
+  /* Two columns, not two stacked blocks. Contact is three lines and Explore
+     is six, so they are top-aligned rather than balanced — same as the wide
+     layout, where they sit at different heights too. */
+  .footer__cols {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    align-items: start;
+    gap: clamp(16px, 3vw, 44px);
+    width: 100%;
+    text-align: left;
+    margin-bottom: clamp(28px, 3.6vw, 44px);
+  }
+
+  .footer__col-title {
+    font-size: clamp(20px, 2.4vw, 32px);
+    margin-bottom: clamp(10px, 1.4vw, 18px);
+  }
+
+  /* One column of links per group. Explore is a 2x3 grid on the wide layout,
+     but half of a phone is far too narrow to split again. */
+  .footer__list {
+    display: grid;
+    gap: clamp(6px, 0.8vw, 10px);
+  }
+
+  .footer__item {
+    font-size: clamp(14px, 1.7vw, 18px);
+  }
+
+  .footer__pills {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: space-between;
+    align-items: center;
+    gap: clamp(10px, 1.4vw, 16px);
+    width: 100%;
+  }
+
+  .footer__pill {
+    height: 35px;
+    padding-inline: clamp(12px, 2vw, 20px);
+    border-radius: 35px;
+    font-size: clamp(13px, 1.7vw, 18px);
+  }
+}
+
+@media (max-width: 560px) {
+  /* Side by side no longer leaves the two pills a readable line each. */
+  .footer__pills {
+    justify-content: center;
+  }
+}
+
+/* ===========================================================================
+   CLOSING TAGLINE
+   The line the investor one-pager opens and closes on, and the last thing on
+   the page before the footer. It is the same sentence as the thesis hero at
+   the top: the document bookends itself with it, so the site does too.
+
+   The sweep across the middle clause is .hero__highlight — the selectors up
+   in the HERO block carry .closing__highlight alongside it, so there is one
+   gradient and one --t-sweep-dur, not two that can drift apart.
+   =========================================================================== */
+
+.closing {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  padding-inline: var(--page-gutter);
+  /* Less underneath than above: the rule below belongs to the handover, so
+     it sits closer to the line it is closing than to the hero it opens. */
+  padding-block: clamp(56px, 7.4vw, 108px) clamp(32px, 4.2vw, 60px);
+  background: var(--cream);
+  box-sizing: border-box;
+}
+
+.closing__rule {
+  display: block;
+  width: 100%;
+  max-width: var(--page-width);
+  height: 1px;
+  margin-top: clamp(32px, 4.2vw, 60px);
+  background: color-mix(in srgb, var(--sovhi-green) 30%, transparent);
+  transform-origin: 50% 50%;
+  will-change: transform;
+}
+
+.closing__line {
+  max-width: 26ch;
+  margin: 0;
+  text-align: center;
+  font-size: var(--fs-48);
+  line-height: 1.16;
+  font-weight: 800;
+  color: var(--sovhi-green);
+  text-wrap: balance;
+  will-change: transform, opacity;
 }
