@@ -46,13 +46,25 @@ export default function HowItWorks() {
   const inView = useInView(ref, { once: true, amount: HOW.inViewAmount });
   const play = Boolean(inView || reduceMotion);
 
-  const fade = {
-    initial: reduceMotion ? { opacity: 1 } : { opacity: 0 },
-    animate: play ? { opacity: 1 } : { opacity: 0 },
+  /* Heading fades and rises; the photo fades and grows, matching the hero
+     image so the two big photos on the page arrive the same way. */
+  const fadeUp = {
+    initial: reduceMotion ? { opacity: 1, y: 0 } : { opacity: 0, y: 16 },
+    animate: play ? { opacity: 1, y: 0 } : { opacity: 0, y: 16 },
     transition: {
-      duration: reduceMotion ? 0 : HOW.fade.duration,
+      duration: reduceMotion ? 0 : 0.9,
       delay: reduceMotion ? 0 : HOW.fade.delay,
-      ease: "easeOut" as const,
+      ease: EASE_GENTLE,
+    },
+  };
+
+  const fadeGrow = {
+    initial: reduceMotion ? { opacity: 1, scale: 1 } : { opacity: 0, scale: 0.94 },
+    animate: play ? { opacity: 1, scale: 1 } : { opacity: 0, scale: 0.94 },
+    transition: {
+      duration: reduceMotion ? 0 : 1.2,
+      delay: reduceMotion ? 0 : HOW.fade.delay,
+      ease: EASE_GENTLE,
     },
   };
 
@@ -64,11 +76,11 @@ export default function HowItWorks() {
         aria-labelledby="how-title"
         id="how-it-works"
       >
-        <motion.h2 id="how-title" className="how__title" {...fade}>
+        <motion.h2 id="how-title" className="how__title" {...fadeUp}>
           A clearer picture of what&rsquo;s shaping your health
         </motion.h2>
 
-        <motion.figure className="how__figure" {...fade}>
+        <motion.figure className="how__figure" {...fadeGrow}>
           <Image
             src="/images/phone-in-hand-render.png"
             alt="A passenger on a plane holding a phone showing a Sovhi vitality score of 78 out of 100, with a breakdown of the signals driving it."

@@ -16,9 +16,9 @@ Page is 1440 wide and **9340px** tall total. Side border is **108px**
 | 4 | 2961 | 1114 | Light-Blue | Health doesn't start with a diagnosis | **built** (layout only, motion pending) |
 | 5 | 4075 | 1190 | Sovhi Green | One problem. Four places to intervene | code complete |
 | 6 | 5265 | 974 | Cream | Uncommon depth for lasting steadiness | code complete |
-| 7 | 6239 | 1535 | Cream | Meet our dream team | code complete |
-| 8 | 7774 | 822 | Cream | Be among the first to see what's shaping health earlier | code complete |
-| 9 | 8596 | 744 | Cream + Off-Black panel | *(footer)* | code complete |
+| 7 | — | 830 | Cream | Meet our dream team | **built** (redesigned as a carousel, node 435-77) |
+| 8 | 7774 | 822 | Cream | Be among the first to see what's shaping health earlier | **built** (node 401-286) |
+| 9 | 8596 | 744 | Cream + Off-Black panel | *(footer)* | **built** (node 401-318) |
 
 All nine sections are present in `full-page.txt`. Heights sum to 9340.
 
@@ -153,6 +153,75 @@ separately left its `left: calc(313 * var(--u))` in place and pushed the photo
 clean out of its grid column. The same mistake is possible in any future
 section that follows this pattern.
 
+## Section 7 notes (built — node 435-77)
+
+Redesigned from the two-row grid in the full-page frame into a horizontal
+carousel: five 287.69x610 cards on a 317.69 pitch from x=109, track 1558.45
+wide in a 1440 frame, so the fifth card hangs 227px off the right and only
+60px of it shows.
+
+`maxScroll` is 336.45 (where the last card reaches the same 109 gutter the
+first starts at) = 1.06 pitches, rounded to **one step**, so every click moves
+exactly one card and the end margin is 90 rather than 109. A consistent step
+beats a 19px stub click.
+
+Below 1180 the track becomes a native scroll-snap container so touch users can
+swipe; the same pill drives `scrollLeft` there instead of the transform.
+
+Each photo has its own Figma box and offset — the designer sized and nudged
+them individually, so there is no shared crop.
+
+## Section 8 notes (built — node 401-286)
+
+Eight photo cards ringing centred copy. They deal in from (1520, 880) —
+off-stage past the bottom-right corner — **alternating right/left and building
+outward from the centre**: desk, window, picnic, steps, track, music,
+nutrition, dusk. 0.9s each, 0.22s apart, all settled at 2.54s.
+
+**Parallax and the deal both write translateY**, so each card is two nested
+elements: the outer drifts with scroll, the inner is dealt. Neutral is at
+scroll progress 0.5, so the Figma position is what you see with the section
+centred.
+
+`PARALLAX_RANGE` is 240 — the strongest card moves +/-48px, which is the most
+the layout takes before a corner crosses the section edge (at 260 the top-left
+card breaks the top by 2px). Depths run 0.12 to 0.40.
+
+Note: while this is the last section on the page, scroll progress tops out
+near 0.48, so only half the parallax range is reachable. The footer will open
+it up.
+
+Asset ratios identified all but three cards; the pairs `running-on-track` /
+`aerial-track-view` (both 1.4989) and `hero` / `teal-hero` (both 1.2551) were
+ambiguous. The render confirmed: track photo top-right, aerial top-centre,
+teal-hero bottom-right.
+
+## Section 9 notes (built — node 401-318)
+
+Dark panel inset 20px, rounded on its **top corners only**, shadow cast
+upward. It rises 160px out of the bottom as you scroll and the logo grows
+0.8 -> 1.0, both scroll-linked with `offset: ["start end", "end end"]` — the
+footer is the last thing on the page and can never scroll fully past the
+viewport, so that range ends at the page bottom, which is exactly where both
+should come to rest.
+
+**Content lives inside the panel**, so it rises with it and the logo straddles
+the top edge naturally. Every offset in the CSS is therefore panel-relative:
+Figma's section coordinates minus (20, 194). The logo lands at (577, -121) —
+negative, i.e. sticking out of the top.
+
+Copy staggers once the footer is 35% in view: wordmark, tagline, waitlist
+button, get-in-touch button, Contact column, Explore column, legal pills. The
+tagline uses the same feathered mask wipe as the hero highlight.
+
+The logo SVG is a 244 canvas holding a 224 mark inset 10, with the shadow
+baked in as a filter (dy 10, blur 5 = Figma's 0 10px 10px). Ids are prefixed
+in `FooterLogo.tsx` so they cannot clash with the nav mark.
+
+**Side effect:** adding the footer opened up the waitlist section's parallax.
+It was capped near progress 0.48 while it was the last section; the full
+range is now reachable (measured -39 to +48 on the strongest card).
+
 ## Full-bleed colour
 
 `.page` is capped at 1440 and centred, so a coloured section would otherwise
@@ -190,14 +259,19 @@ panel (casts upward) · `--shadow-tint` §4 cards (turquoise, not black) ·
 1. ~~Section 2's `$150B+` card duplicated the `30%` card's copy.~~ **Resolved
    2026-09-13** — corrected to *"Burnout costs U.S. employers more than $150
    billion each year..."*. The Figma file still holds the old text.
-2. **Placeholder content in Figma.** Two team members (Colin Lacey, TS
+2. **Team section is incomplete.** TS Harigopal and Colin Lacey have no photo
+   (Rupa's and Shilpa's stand in) and their role badges render as an empty
+   coloured tab — Figma draws the badge shape but supplies no text. Joe's and
+   Shilpa's assets also do not match the ratios Figma assumed (0.667 vs 0.534,
+   1.000 vs 0.903), so they crop rather than land exactly.
+3. **Placeholder content in Figma.** Two team members (Colin Lacey, TS
    Harigopal) have `OOO` where a role badge belongs. Footer contact is
    `000 - 000 0000` and `info@sovhi.com`. Confirm before these ship.
-3. **Missing team photos.** `public/images/` has Rupa, Joe and Shilpa. Colin
+4. **Missing team photos.** `public/images/` has Rupa, Joe and Shilpa. Colin
    and TS are absent. Section 8 also needs 8 scattered photos, and sections
    3/4/5 need their own images — all still `placehold.co` in the export.
-4. **Section 6 uses rotated cards** (−4deg and −5deg, `transform-origin: top
+5. **Section 6 uses rotated cards** (−4deg and −5deg, `transform-origin: top
    left`). Motion transforms will have to compose with that rotation rather
    than replace it.
-5. **Section 5 has a 4-tab selector** with one tab active. Needs defined
+6. **Section 5 has a 4-tab selector** with one tab active. Needs defined
    behaviour: does switching tabs change the image and the copy below?

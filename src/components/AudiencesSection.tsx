@@ -25,6 +25,14 @@ import { AnimatePresence, motion, useInView, useReducedMotion } from "motion/rea
 type Audience = {
   id: string;
   tab: string;
+  /**
+   * Phone-width label. The four full labels total 68 characters, which at a
+   * 390px bar would need roughly a 7px type size to sit on one line each —
+   * so below 800 the bar shows these instead. Both are rendered and one is
+   * display:none'd in CSS, which also drops it from the accessibility tree,
+   * so each button's accessible name always matches its visible text.
+   */
+  tabShort: string;
   /** Figma tile width inside the 680 bar: 154 | 193 | 188 | 135 = 670. */
   tabWidth: number;
   title: string;
@@ -49,6 +57,7 @@ const AUDIENCES: readonly Audience[] = [
     id: "employers",
     tabWidth: 154,
     tab: "Employers & HR",
+    tabShort: "Employers",
     title: "Catch burnout before it becomes turnover",
     body: "Identify patterns of stress, disconnection, and wellbeing risk before they become attrition, absence, or rising costs.",
     image: "/images/woman-coding.jpg",
@@ -63,6 +72,7 @@ const AUDIENCES: readonly Audience[] = [
     id: "payers",
     tabWidth: 193,
     tab: "Health Plans & Payers",
+    tabShort: "Payers",
     title: "See risk before utilization",
     body: "Surface upstream signals that can help identify members who may need support earlier.",
     image: "/images/running-on-track.jpg",
@@ -77,6 +87,7 @@ const AUDIENCES: readonly Audience[] = [
     id: "providers",
     tabWidth: 188,
     tab: "Healthcare Providers",
+    tabShort: "Providers",
     title: "Bring context into care",
     body: "Understand the conditions surrounding a patient's health alongside the clinical picture.",
     image: "/images/healthcare-providers.png",
@@ -91,6 +102,7 @@ const AUDIENCES: readonly Audience[] = [
     id: "public",
     tabWidth: 135,
     tab: "Public Health",
+    tabShort: "Public Health",
     title: "Move prevention upstream",
     body: "Measure the conditions shaping community wellbeing and identify where intervention can begin.",
     image: "/images/making-music.jpg",
@@ -251,7 +263,8 @@ export default function AudiencesSection() {
               style={{ width: `calc(${a.tabWidth} * var(--u))` }}
               onClick={() => select(i)}
             >
-              {a.tab}
+              <span className="audiences__tab-full">{a.tab}</span>
+              <span className="audiences__tab-short">{a.tabShort}</span>
             </button>
           ))}
         </div>

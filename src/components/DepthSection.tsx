@@ -15,10 +15,28 @@ import { DEPTH } from "./motion-timeline";
  */
 const DECK = { x: 1620, y: 1180 };
 
+/**
+ * The same deal, for the compact layout. Below 1180 the cards leave the --u
+ * grid and sit in flow (overlapped by negative margins), so there is no
+ * absolute point to fly from — offsets are percentages of each card's own
+ * box instead. Card i backs off by the rows between it and the corner plus a
+ * common overshoot, which converges the three on roughly one point past the
+ * bottom-right, exactly as DECK does above.
+ */
+const DECK_COMPACT = { x: 58, row: 104, y: 74 };
+
 type Card = {
   id: string;
   at: { x: number; y: number };
   rot: number;
+  /**
+   * Resting angle for the compact deck. Much shallower than `rot`: the wide
+   * cards are short and broad, so 4-5deg reads as a fan, but the compact
+   * ones are tall columns of body text and the same angle tips whole
+   * paragraphs far enough to look like a rendering fault rather than a
+   * deliberate deal.
+   */
+  rotCompact: number;
   rotFrom: number;
   title: string;
   body: string;
@@ -29,6 +47,7 @@ const CARDS: readonly Card[] = [
     id: "adaptive",
     at: { x: 499, y: 160 },
     rot: 0,
+    rotCompact: 0,
     rotFrom: 10,
     title: "Adaptive Guidance",
     body: "What helps in a demanding month isn't what helps in a quiet one. Sovhi's guidance moves with you, and gets more specific the longer you use it.",
@@ -37,6 +56,7 @@ const CARDS: readonly Card[] = [
     id: "baseline",
     at: { x: 462, y: 414.87 },
     rot: -4,
+    rotCompact: -1.8,
     rotFrom: -18,
     title: "Baseline Clarity",
     body: "Your steadiness has a shape. Sovhi learns it, then shows you plainly where you're holding and where you've drifted, in language you'd actually use about yourself.",
@@ -45,6 +65,7 @@ const CARDS: readonly Card[] = [
     id: "pathway",
     at: { x: 456, y: 681.4 },
     rot: -5,
+    rotCompact: -2.4,
     rotFrom: -20,
     // curly U+2019 here, matching Figma; the body copy uses straight &apos;
     title: "A Pathway That’s Yours",
@@ -85,10 +106,14 @@ export default function DepthSection() {
         </motion.p>
 
         {CARDS.map((card, i) => {
+          /* The resting angle now applies in both layouts. The compact one
+             used to flatten every card to 0deg and rise them straight up,
+             which threw away the deck entirely; it keeps the fan and the
+             throw, just at a size that fits a phone. */
           const rest = {
             x: 0,
             y: 0,
-            rotate: isStacked ? card.rot : 0,
+            rotate: isStacked ? card.rot : card.rotCompact,
             opacity: 1,
           };
           const dealt = isStacked
@@ -98,7 +123,12 @@ export default function DepthSection() {
                 rotate: card.rotFrom,
                 opacity: 0,
               }
-            : { x: 0, y: 28, rotate: 0, opacity: 0 };
+            : {
+                x: `${DECK_COMPACT.x}%`,
+                y: `${(CARDS.length - 1 - i) * DECK_COMPACT.row + DECK_COMPACT.y}%`,
+                rotate: card.rotFrom,
+                opacity: 0,
+              };
           const delay = DEPTH.deal.base + i * DEPTH.deal.stagger;
 
           return (
